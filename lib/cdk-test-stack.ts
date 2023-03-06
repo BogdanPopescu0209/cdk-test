@@ -1,12 +1,81 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
+import * as codepipeline_actions from 'aws-cdk-lib/aws-codepipeline-actions';
+import * as targets from 'aws-cdk-lib/aws-events-targets';
+import * as events from 'aws-cdk-lib/aws-events';
+import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 
 export class CdkTestStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    
+    const pipeline = new codepipeline.Pipeline(this, 'Pipeline', {
+      pipelineName: 'your-pipeline-name'
+    });
 
+    const sourceStage = pipeline.addStage({ stageName: 'Source' });
+
+    const sourceOutput = new codepipeline.Artifact();
+
+    const sourceAction = new codepipeline_actions.GitHubSourceAction({
+      actionName: 'GitHub_Source',
+      owner: 'BogdanPopescu0209',
+      repo: 'cdk-test',
+      branch: 'main',
+      oauthToken: cdk.SecretValue.secretsManager('github-token'),
+      output: sourceOutput,
+    });
+
+    sourceStage.addAction(sourceAction);
+
+    const buildStage = pipeline.addStage({ stageName: 'Build' });
+
+    const buildAction = new codepipeline_actions.CodeBuildAction({
+      actionName: 'CodeBuild',
+      project: new codebuild.Project(this, 'CodeBuildProject', {
+        projectName: 'your-codebuild-project-name',
+        environment: {
+          buildImage: codebuild.LinuxBuildImage.STANDARD_4_0,
+        },
+        buildSpec: codebuild.BuildSpec.fromObject({
+          version: '0.2',
+          phases: {
+            install: {
+              commands: [
+                'echo install',
+                'echi test install'
+              ],
+            },
+            build: {
+              commands: [
+                'echo build',
+                'echi test build'
+              ],
+            },
+          }
+        }),
+      }),
+      input: sourceOutput
+    });
+
+    buildStage.addAction(buildAction);
+
+    const rule = new events.Rule(this, 'GitHubEventRule', {
+      description: 'Rule that triggers the CodePipeline when a commit is pushed to the main branch on GitHub',
+      eventPattern: {
+        source: ['aws.codecommit'],
+        detailType: ['CodeCommit Repository State Change'],
+        detail: {
+          referenceType: ['branch'],
+          referenceName: ['main'],
+          event: ['referenceUpdated'],
+        },
+      },
+    });
+
+    rule.addTarget(new targets.CodePipeline(pipeline));
   }
 }
+
+
