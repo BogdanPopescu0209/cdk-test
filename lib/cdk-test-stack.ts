@@ -36,7 +36,7 @@ export class CdkTestStack extends cdk.Stack {
           "arn:aws:codestar-connections:eu-west-1:452280938609:connection/bebcb069-0d3c-48d9-8fc4-750e94c5be20",
         owner: "BogdanPopescu0209",
         repo: "cdk-test",
-        branch: "main"
+        branch: "main",
       });
 
     sourceStage.addAction(sourceAction);
@@ -56,13 +56,13 @@ export class CdkTestStack extends cdk.Stack {
             install: {
               commands: [
                 'echo install',
-                'echi test install'
+                'echo test install'
               ],
             },
             build: {
               commands: [
                 'echo build',
-                'echi test build'
+                'echo test build'
               ],
             },
           }
