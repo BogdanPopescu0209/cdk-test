@@ -86,7 +86,7 @@ export class CdkTestStack extends cdk.Stack {
     // });
 
     // rule.addTarget(new targets.CodePipeline(pipeline));
-
+    //test
     pipeline.onStateChange('OnStateChange', {
       target: new targets.CodePipeline(pipeline),
       eventPattern: {
