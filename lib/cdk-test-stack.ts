@@ -97,6 +97,15 @@ export class CdkTestStack extends cdk.Stack {
           referenceName: ['main'],
           event: ['referenceUpdated'],
         }
+        // detail: {
+        //   event: ["referenceUpdated"],
+        //   referenceType: ["branch"],
+        //   referenceName: ["main"],
+        //   commitId: [{
+        //     prefix: "github",
+        //     exists: true
+        //   }]
+        // }
       }
     })
   }
