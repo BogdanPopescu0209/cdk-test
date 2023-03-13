@@ -91,7 +91,7 @@ export class CdkTestStack extends cdk.Stack {
       target: new targets.CodePipeline(pipeline),
       eventPattern: {
         source: [sourceAction.variables.connectionArn],
-        detailType: ['CodeCommit Repository State Change'],
+        detailType: ['GitHub Repository State Change'],
         detail: {
           referenceType: ['branch'],
           referenceName: ['main'],
