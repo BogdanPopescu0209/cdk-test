@@ -70,7 +70,6 @@ export class CdkTestStack extends cdk.Stack {
       }),
       input: sourceOutput
     });
-
     buildStage.addAction(buildAction);
 
     // const rule = new events.Rule(this, 'GitHubEventRule', {
