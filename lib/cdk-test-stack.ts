@@ -128,7 +128,6 @@ export class CdkTestStack extends cdk.Stack {
     // new CfnOutput(scope, "Github-Webhook-Secret", {
     //   value: secretToken,
     // });
-    ////
   }
 }
 
