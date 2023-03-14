@@ -61,20 +61,20 @@ export class CdkTestStack extends cdk.Stack {
 
     buildStage.addAction(buildAction);
 
-    const rule = new events.Rule(this, 'GitHubEventRule', {
-      description: 'Rule that triggers the CodePipeline when a commit is pushed to the main branch on GitHub',
-      eventPattern: {
-        source: ['aws.codecommit'],
-        detailType: ['CodeCommit Repository State Change'],
-        detail: {
-          referenceType: ['branch'],
-          referenceName: ['main'],
-          event: ['referenceUpdated'],
-        },
-      },
-    });
+    // const rule = new events.Rule(this, 'GitHubEventRule', {
+    //   description: 'Rule that triggers the CodePipeline when a commit is pushed to the main branch on GitHub',
+    //   eventPattern: {
+    //     source: ['aws.codecommit'],
+    //     detailType: ['CodeCommit Repository State Change'],
+    //     detail: {
+    //       referenceType: ['branch'],
+    //       referenceName: ['main'],
+    //       event: ['referenceUpdated'],
+    //     },
+    //   },
+    // });
 
-    rule.addTarget(new targets.CodePipeline(pipeline));
+    // rule.addTarget(new targets.CodePipeline(pipeline));
   }
 }
 
