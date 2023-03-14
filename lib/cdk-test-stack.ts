@@ -101,7 +101,8 @@ export class CdkTestStack extends cdk.Stack {
     //   }
     // })
 
-    const secretToken = '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';
+    // const secretToken = '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';
+    const secretToken = 'aabb'
 
     const wh = new codepipeline.CfnWebhook(this, "gh-webhook", {
       authentication: "GITHUB_HMAC",
