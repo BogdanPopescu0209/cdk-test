@@ -6,6 +6,7 @@ import * as targets from 'aws-cdk-lib/aws-events-targets';
 import * as codepipelineActions from "aws-cdk-lib/aws-codepipeline-actions";
 import * as events from 'aws-cdk-lib/aws-events';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
+import { CfnOutput } from 'aws-cdk-lib';
 
 export class CdkTestStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -87,18 +88,45 @@ export class CdkTestStack extends cdk.Stack {
 
     // rule.addTarget(new targets.CodePipeline(pipeline));
     //test
-    pipeline.onStateChange('OnStateChange', {
-      target: new targets.CodePipeline(pipeline),
-      eventPattern: {
-        source: [sourceAction.variables.connectionArn],
-        detailType: ['GitHub Repository State Change'],
-        detail: {
-          referenceType: ['branch'],
-          referenceName: ['main'],
-          event: ['referenceUpdated'],
+    // pipeline.onStateChange('OnStateChange', {
+    //   target: new targets.CodePipeline(pipeline),
+    //   eventPattern: {
+    //     source: [sourceAction.variables.connectionArn],
+    //     detailType: ['GitHub Repository State Change'],
+    //     detail: {
+    //       referenceType: ['branch'],
+    //       referenceName: ['main'],
+    //       event: ['referenceUpdated'],
+    //     }
+    //   }
+    // })
+
+    const secretToken = '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';
+
+    const wh = new codepipeline.CfnWebhook(this, "gh-webhook", {
+      authentication: "GITHUB_HMAC",
+      authenticationConfiguration: {
+        secretToken
+      },
+      filters: [
+        {
+          jsonPath: "$.ref",
+          matchEquals: "refs/heads/main",
         }
-      }
-    })
+      ],
+      targetAction: sourceAction.actionProperties.actionName,
+      targetPipeline: pipeline.pipelineName,
+      targetPipelineVersion: 1,
+      registerWithThirdParty: false,
+    });
+  
+    // new CfnOutput(scope, "Github-Webhook-URL", {
+    //   value: wh.attrUrl,
+    // });
+  
+    // new CfnOutput(scope, "Github-Webhook-Secret", {
+    //   value: secretToken,
+    // });
   }
 }
 
