@@ -110,10 +110,10 @@ export class CdkTestStack extends cdk.Stack {
         secretToken
       },
       filters: [
-        {
-          jsonPath: "$.ref",
-          matchEquals: "refs/heads/main",
-        }
+        // {
+        //   jsonPath: "$.ref",
+        //   matchEquals: "refs/heads/main",
+        // }
       ],
       targetAction: sourceAction.actionProperties.actionName,
       targetPipeline: pipeline.pipelineName,
