@@ -96,7 +96,7 @@ export class CdkTestStack extends cdk.Stack {
       targetAction: sourceAction.actionProperties.actionName,
       targetPipeline: pipeline.pipelineName,
       targetPipelineVersion: 1,
-      //registerWithThirdParty: false,
+      registerWithThirdParty: false,
     });
 
     const eventRule = new events.Rule(this, 'MyEventRule', {
