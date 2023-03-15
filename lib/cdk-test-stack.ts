@@ -96,8 +96,22 @@ export class CdkTestStack extends cdk.Stack {
       targetAction: sourceAction.actionProperties.actionName,
       targetPipeline: pipeline.pipelineName,
       targetPipelineVersion: 1,
-      registerWithThirdParty: false,
+      //registerWithThirdParty: false,
     });
+
+    const eventRule = new events.Rule(this, 'MyEventRule', {
+      eventPattern: {
+        source: ['aws.codecommit'],
+        detailType: ['CodeCommit Repository State Change'],
+        detail: {
+          repositoryName: ['BogdanPopescu0209'],
+          event: ['referenceUpdated'],
+          referenceType: ['branch'],
+          referenceName: ['main'],
+        },
+      },
+    });
+    eventRule.addTarget(new targets.CodePipeline(pipeline));
 
     // const rule = new events.Rule(this, 'GitHubEventRule', {
     //   description: 'Rule that triggers the CodePipeline when a commit is pushed to the main branch on GitHub',
@@ -128,8 +142,6 @@ export class CdkTestStack extends cdk.Stack {
     // })
 
     // const secretToken = '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';
-
-    /// test
 
     new CfnOutput(this, "Github-Webhook-URL", {
       value: wh.attrUrl,
