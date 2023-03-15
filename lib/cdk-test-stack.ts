@@ -42,7 +42,16 @@ export class CdkTestStack extends cdk.Stack {
     new s3deploy.BucketDeployment(this, 'DeployFiles', {
       sources: [s3deploy.Source.asset('./icons')],
       destinationBucket: existingBucket,
+      retainOnDelete: true
     });
+    //const artifact = new codepipeline.Artifact();
+    
+    // const getObjectAction = new codepipelineActions.S3SourceAction({
+    //   actionName: 'GetObjectFromS3',
+    //   bucket: existingBucket,
+    //   bucketKey: ,
+    //   output: artifact,
+    // });
   
     // const sourceAction =
     //   new codepipelineActions.CodeStarConnectionsSourceAction({
@@ -75,7 +84,11 @@ export class CdkTestStack extends cdk.Stack {
           ARN_OBJECTS: {
             value: arnObjects,
             type: BuildEnvironmentVariableType.PLAINTEXT
-          }
+          },
+          // ARTIFACT: {
+          //   value: artifact.artifactName,
+          //   type: BuildEnvironmentVariableType.PLAINTEXT
+          // }
         },
         projectName: 'your-codebuild-project-name',
         environment: {
@@ -89,7 +102,8 @@ export class CdkTestStack extends cdk.Stack {
                 'echo install',
                 'echo test install',
                 'echo $MY_BUCKET',
-                'echo $ARN_OBJECTS'
+                'echo $ARN_OBJECTS',
+                //'echo $ARTIFACT'
               ],
             },
             build: {
