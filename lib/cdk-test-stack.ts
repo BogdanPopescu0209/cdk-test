@@ -30,6 +30,7 @@ export class CdkTestStack extends cdk.Stack {
       branch: 'main',
       oauthToken: cdk.SecretValue.secretsManager('github-token'),
       output: sourceOutput,
+      trigger: codepipeline_actions.GitHubTrigger.WEBHOOK
     });
 
     // const sourceAction =
