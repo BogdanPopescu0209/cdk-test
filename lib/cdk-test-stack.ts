@@ -134,6 +134,8 @@ export class CdkTestStack extends cdk.Stack {
     const logFilePath = path.join(process.cwd(), 'cdk.out', 'pipeline.log');
     fs.appendFileSync(logFilePath, `${message}\n`);
 
+    console.log(message)
+
     new CfnOutput(this, "Github-Webhook-URL", {
       value: wh.attrUrl,
     });
