@@ -40,6 +40,7 @@ export class CdkTestStack extends cdk.Stack {
         owner: "BogdanPopescu0209",
         repo: "cdk-test",
         branch: "main",
+        triggerOnPush: false
       });
 
     sourceStage.addAction(sourceAction);
@@ -75,28 +76,28 @@ export class CdkTestStack extends cdk.Stack {
     });
     buildStage.addAction(buildAction);
 
-    const secretToken = 'test-secret-token'
+    //const secretToken = 'test-secret-token'
 
-    const wh = new codepipeline.CfnWebhook(this, "gh-webhook", {
-      authentication: "GITHUB_HMAC",
-      authenticationConfiguration: {
-        secretToken
-      },
-      filters: [
-        // {
-        //   jsonPath: "$.repository.full_name",
-        //   matchEquals: "BogdanPopescu0209/uuuuuuuuuuuu",
-        // },
-        {
-          jsonPath: "$.ref",
-          matchEquals: "refs/heads/main",
-        }
-      ],
-      targetAction: sourceAction.actionProperties.actionName,
-      targetPipeline: pipeline.pipelineName,
-      targetPipelineVersion: 1,
-      registerWithThirdParty: false,
-    });
+    // const wh = new codepipeline.CfnWebhook(this, "gh-webhook", {
+    //   authentication: "GITHUB_HMAC",
+    //   authenticationConfiguration: {
+    //     secretToken
+    //   },
+    //   filters: [
+    //     // {
+    //     //   jsonPath: "$.repository.full_name",
+    //     //   matchEquals: "BogdanPopescu0209/uuuuuuuuuuuu",
+    //     // },
+    //     {
+    //       jsonPath: "$.ref",
+    //       matchEquals: "refs/heads/main",
+    //     }
+    //   ],
+    //   targetAction: sourceAction.actionProperties.actionName,
+    //   targetPipeline: pipeline.pipelineName,
+    //   targetPipelineVersion: 1,
+    //   registerWithThirdParty: false,
+    // });
 
     // const rule = new events.Rule(this, 'GitHubEventRule', {
     //   description: 'Rule that triggers the CodePipeline when a commit is pushed to the main branch on GitHub',
@@ -130,13 +131,13 @@ export class CdkTestStack extends cdk.Stack {
 
     /// test
 
-    new CfnOutput(this, "Github-Webhook-URL", {
-      value: wh.attrUrl,
-    });
+    // new CfnOutput(this, "Github-Webhook-URL", {
+    //   value: wh.attrUrl,
+    // });
 
-    new CfnOutput(this, "Github-Webhook-Secret", {
-      value: secretToken,
-    });
+    // new CfnOutput(this, "Github-Webhook-Secret", {
+    //   value: secretToken,
+    // });
   }
 }
 
