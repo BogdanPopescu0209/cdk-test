@@ -125,12 +125,15 @@ export class CdkTestStack extends cdk.Stack {
     // })
 
     // const secretToken = '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';
-  
+
     /// test
+
+    console.log({ wh });
+
     new CfnOutput(this, "Github-Webhook-URL", {
       value: wh.attrUrl,
     });
-  
+
     new CfnOutput(this, "Github-Webhook-Secret", {
       value: secretToken,
     });
