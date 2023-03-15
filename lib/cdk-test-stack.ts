@@ -44,6 +44,35 @@ export class CdkTestStack extends cdk.Stack {
 
     const buildStage = pipeline.addStage({ stageName: 'Build' });
 
+    const buildAction = new codepipeline_actions.CodeBuildAction({
+      actionName: 'CodeBuild',
+      project: new codebuild.Project(this, 'CodeBuildProject', {
+        projectName: 'your-codebuild-project-name',
+        environment: {
+          buildImage: codebuild.LinuxBuildImage.STANDARD_4_0,
+        },
+        buildSpec: codebuild.BuildSpec.fromObject({
+          version: '0.2',
+          phases: {
+            install: {
+              commands: [
+                'echo install',
+                'echo test install',
+              ],
+            },
+            build: {
+              commands: [
+                'echo build',
+                'echo test build'
+              ],
+            },
+          }
+        }),
+      }),
+      input: sourceOutput
+    });
+    buildStage.addAction(buildAction);
+
     const secretToken = 'test-secret-token'
 
     const wh = new codepipeline.CfnWebhook(this, "gh-webhook", {
@@ -66,36 +95,6 @@ export class CdkTestStack extends cdk.Stack {
       targetPipelineVersion: 1,
       registerWithThirdParty: false,
     });
-
-    const buildAction = new codepipeline_actions.CodeBuildAction({
-      actionName: 'CodeBuild',
-      project: new codebuild.Project(this, 'CodeBuildProject', {
-        projectName: 'your-codebuild-project-name',
-        environment: {
-          buildImage: codebuild.LinuxBuildImage.STANDARD_4_0,
-        },
-        buildSpec: codebuild.BuildSpec.fromObject({
-          version: '0.2',
-          phases: {
-            install: {
-              commands: [
-                'echo install',
-                'echo test install',
-                'echo $wh'
-              ],
-            },
-            build: {
-              commands: [
-                'echo build',
-                'echo test build'
-              ],
-            },
-          }
-        }),
-      }),
-      input: sourceOutput
-    });
-    buildStage.addAction(buildAction);
 
     // const rule = new events.Rule(this, 'GitHubEventRule', {
     //   description: 'Rule that triggers the CodePipeline when a commit is pushed to the main branch on GitHub',
@@ -128,13 +127,13 @@ export class CdkTestStack extends cdk.Stack {
     // const secretToken = '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';
   
     /// test
-    // new CfnOutput(scope, "Github-Webhook-URL", {
-    //   value: wh.attrUrl,
-    // });
+    new CfnOutput(this, "Github-Webhook-URL", {
+      value: wh.attrUrl,
+    });
   
-    // new CfnOutput(scope, "Github-Webhook-Secret", {
-    //   value: secretToken,
-    // });
+    new CfnOutput(this, "Github-Webhook-Secret", {
+      value: secretToken,
+    });
   }
 }
 
