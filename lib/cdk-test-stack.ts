@@ -60,6 +60,7 @@ export class CdkTestStack extends cdk.Stack {
     });
 
     buildStage.addAction(buildAction);
+    /////////////
 
     // const rule = new events.Rule(this, 'GitHubEventRule', {
     //   description: 'Rule that triggers the CodePipeline when a commit is pushed to the main branch on GitHub',
