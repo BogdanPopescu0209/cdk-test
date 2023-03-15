@@ -11,6 +11,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as pipelines from 'aws-cdk-lib/pipelines';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 import { BuildEnvironmentVariableType } from 'aws-cdk-lib/aws-codebuild';
 
 export class CdkTestStack extends cdk.Stack {
@@ -37,6 +38,11 @@ export class CdkTestStack extends cdk.Stack {
 
     const existingBucket = s3.Bucket.fromBucketArn(this, 'bucket', 'arn:aws:s3:::my-bucket-sandbox');
     const arnObjects = existingBucket.arnForObjects('*');
+
+    new s3deploy.BucketDeployment(this, 'DeployFiles', {
+      sources: [s3deploy.Source.asset('./icons')],
+      destinationBucket: existingBucket,
+    });
   
     // const sourceAction =
     //   new codepipelineActions.CodeStarConnectionsSourceAction({
