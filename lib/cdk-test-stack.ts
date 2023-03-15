@@ -9,6 +9,7 @@ import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import { CfnOutput } from 'aws-cdk-lib';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as pipelines from 'aws-cdk-lib/pipelines';
 
 export class CdkTestStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -40,7 +41,7 @@ export class CdkTestStack extends cdk.Stack {
         owner: "BogdanPopescu0209",
         repo: "cdk-test",
         branch: "main",
-        triggerOnPush: false
+        triggerOnPush: false,
       });
 
     sourceStage.addAction(sourceAction);
@@ -78,40 +79,39 @@ export class CdkTestStack extends cdk.Stack {
 
     const secretToken = 'test-secret-token'
 
-    const wh = new codepipeline.CfnWebhook(this, "gh-webhook", {
-      authentication: "GITHUB_HMAC",
-      authenticationConfiguration: {
-        secretToken
-      },
-      filters: [
-        // {
-        //   jsonPath: "$.repository.full_name",
-        //   matchEquals: "BogdanPopescu0209/uuuuuuuuuuuu",
-        // },
-        {
-          jsonPath: "$.ref",
-          matchEquals: "refs/heads/main",
-        }
-      ],
-      targetAction: sourceAction.actionProperties.actionName,
-      targetPipeline: pipeline.pipelineName,
-      targetPipelineVersion: 1,
-      registerWithThirdParty: false,
-    });
+    // const wh = new codepipeline.CfnWebhook(this, "gh-webhook", {
+    //   authentication: "GITHUB_HMAC",
+    //   authenticationConfiguration: {
+    //     secretToken
+    //   },
+    //   filters: [
+    //     // {
+    //     //   jsonPath: "$.repository.full_name",
+    //     //   matchEquals: "BogdanPopescu0209/uuuuuuuuuuuu",
+    //     // },
+    //     {
+    //       jsonPath: "$.ref",
+    //       matchEquals: "refs/heads/main",
+    //     }
+    //   ],
+    //   targetAction: sourceAction.actionProperties.actionName,
+    //   targetPipeline: pipeline.pipelineName,
+    //   targetPipelineVersion: 1,
+    //   registerWithThirdParty: false,
+    // });
 
-    const eventRule = new events.Rule(this, 'MyEventRule', {
+    pipeline.onStateChange('OnStateChange', {
+      target: new targets.CodePipeline(pipeline),
       eventPattern: {
-        source: ['aws.codecommit'],
-        detailType: ['CodeCommit Repository State Change'],
+        source: [sourceAction.variables.connectionArn],
+        detailType: ['GitHub Repository State Change'],
         detail: {
-          repositoryName: ['BogdanPopescu0209'],
-          event: ['referenceUpdated'],
           referenceType: ['branch'],
           referenceName: ['main'],
-        },
-      },
-    });
-    eventRule.addTarget(new targets.CodePipeline(pipeline));
+          event: ['referenceUpdated'],
+        }
+      }
+    })
 
     // const rule = new events.Rule(this, 'GitHubEventRule', {
     //   description: 'Rule that triggers the CodePipeline when a commit is pushed to the main branch on GitHub',
@@ -143,13 +143,13 @@ export class CdkTestStack extends cdk.Stack {
 
     // const secretToken = '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';
 
-    new CfnOutput(this, "Github-Webhook-URL", {
-      value: wh.attrUrl,
-    });
+    // new CfnOutput(this, "Github-Webhook-URL", {
+    //   value: wh.attrUrl,
+    // });
 
-    new CfnOutput(this, "Github-Webhook-Secret", {
-      value: secretToken,
-    });
+    // new CfnOutput(this, "Github-Webhook-Secret", {
+    //   value: secretToken,
+    // });
   }
 }
 
