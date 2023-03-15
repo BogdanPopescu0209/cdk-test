@@ -7,6 +7,8 @@ import * as codepipelineActions from "aws-cdk-lib/aws-codepipeline-actions";
 import * as events from 'aws-cdk-lib/aws-events';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import { CfnOutput } from 'aws-cdk-lib';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export class CdkTestStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -128,7 +130,9 @@ export class CdkTestStack extends cdk.Stack {
 
     /// test
 
-    console.log({ wh });
+    const message = 'Pipeline execution is in progress';
+    const logFilePath = path.join(process.cwd(), 'cdk.out', 'pipeline.log');
+    fs.appendFileSync(logFilePath, `${message}\n`);
 
     new CfnOutput(this, "Github-Webhook-URL", {
       value: wh.attrUrl,
