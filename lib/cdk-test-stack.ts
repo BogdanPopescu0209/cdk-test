@@ -44,6 +44,29 @@ export class CdkTestStack extends cdk.Stack {
 
     const buildStage = pipeline.addStage({ stageName: 'Build' });
 
+    const secretToken = 'test-secret-token'
+
+    const wh = new codepipeline.CfnWebhook(this, "gh-webhook", {
+      authentication: "GITHUB_HMAC",
+      authenticationConfiguration: {
+        secretToken
+      },
+      filters: [
+        {
+          jsonPath: "$.repository.full_name",
+          matchEquals: "BogdanPopescu0209/cdk-test",
+        },
+        {
+          jsonPath: "$.ref",
+          matchEquals: "refs/heads/main",
+        }
+      ],
+      targetAction: sourceAction.actionProperties.actionName,
+      targetPipeline: pipeline.pipelineName,
+      targetPipelineVersion: 1,
+      registerWithThirdParty: false,
+    });
+
     const buildAction = new codepipeline_actions.CodeBuildAction({
       actionName: 'CodeBuild',
       project: new codebuild.Project(this, 'CodeBuildProject', {
@@ -102,24 +125,7 @@ export class CdkTestStack extends cdk.Stack {
     // })
 
     // const secretToken = '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';
-    const secretToken = 'aabb'
-
-    const wh = new codepipeline.CfnWebhook(this, "gh-webhook", {
-      authentication: "GITHUB_HMAC",
-      authenticationConfiguration: {
-        secretToken
-      },
-      filters: [
-        // {
-        //   jsonPath: "$.ref",
-        //   matchEquals: "refs/heads/main",
-        // }
-      ],
-      targetAction: sourceAction.actionProperties.actionName,
-      targetPipeline: pipeline.pipelineName,
-      targetPipelineVersion: 1,
-      registerWithThirdParty: false,
-    });
+  
     /// test
     // new CfnOutput(scope, "Github-Webhook-URL", {
     //   value: wh.attrUrl,
