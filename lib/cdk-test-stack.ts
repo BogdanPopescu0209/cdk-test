@@ -83,7 +83,7 @@ export class CdkTestStack extends cdk.Stack {
       filters: [
         {
           jsonPath: "$.repository.full_name",
-          matchEquals: "BogdanPopescu0209/cdk-test",
+          matchEquals: "BogdanPopescu0209/uuuuuuuuuuuu",
         },
         {
           jsonPath: "$.ref",
