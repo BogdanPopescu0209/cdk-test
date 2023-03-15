@@ -23,26 +23,30 @@ export class CdkTestStack extends cdk.Stack {
 
     const sourceOutput = new codepipeline.Artifact();
 
-    // const sourceAction = new codepipeline_actions.GitHubSourceAction({
-    //   actionName: 'GitHub_Source',
-    //   owner: 'BogdanPopescu0209',
-    //   repo: 'cdk-test',
-    //   branch: 'main',
-    //   oauthToken: cdk.SecretValue.secretsManager('github-token'),
-    //   output: sourceOutput,
-    // });
+    const sourceAction = new codepipeline_actions.GitHubSourceAction({
+      actionName: 'GitHub_Source',
+      owner: 'BogdanPopescu0209',
+      repo: 'cdk-test',
+      branch: 'main',
+      oauthToken: cdk.SecretValue.secretsManager('github-token'),
+      output: sourceOutput,
+    });
 
-    const sourceAction =
-      new codepipelineActions.CodeStarConnectionsSourceAction({
-        actionName: "github",
-        output: sourceOutput,
-        connectionArn:
-          "arn:aws:codestar-connections:eu-west-1:452280938609:connection/bebcb069-0d3c-48d9-8fc4-750e94c5be20",
-        owner: "BogdanPopescu0209",
-        repo: "cdk-test",
-        branch: "main",
-        triggerOnPush: false,
-      });
+    // const sourceAction =
+    //   new codepipelineActions.CodeStarConnectionsSourceAction({
+    //     actionName: "github",
+    //     output: sourceOutput,
+    //     connectionArn:
+    //       "arn:aws:codestar-connections:eu-west-1:452280938609:connection/bebcb069-0d3c-48d9-8fc4-750e94c5be20",
+    //     owner: "BogdanPopescu0209",
+    //     repo: "cdk-test",
+    //     branch: "main",
+    //     triggerOnPush: false,
+    //   });
+
+    // const githubInput = pipelines.CodePipelineSource.connection('BogdanPopescu0209', 'main', {
+    //   connectionArn: 'arn:aws:codestar-connections:eu-west-1:452280938609:connection/bebcb069-0d3c-48d9-8fc4-750e94c5be20', 
+    // })
 
     sourceStage.addAction(sourceAction);
 
@@ -77,7 +81,7 @@ export class CdkTestStack extends cdk.Stack {
     });
     buildStage.addAction(buildAction);
 
-    const secretToken = 'test-secret-token'
+    //const secretToken = 'test-secret-token'
 
     // const wh = new codepipeline.CfnWebhook(this, "gh-webhook", {
     //   authentication: "GITHUB_HMAC",
@@ -100,18 +104,18 @@ export class CdkTestStack extends cdk.Stack {
     //   registerWithThirdParty: false,
     // });
 
-    pipeline.onStateChange('OnStateChange', {
-      target: new targets.CodePipeline(pipeline),
-      eventPattern: {
-        source: [sourceAction.variables.connectionArn],
-        detailType: ['GitHub Repository State Change'],
-        detail: {
-          referenceType: ['branch'],
-          referenceName: ['main'],
-          event: ['referenceUpdated'],
-        }
-      }
-    })
+    // pipeline.onStateChange('OnStateChange', {
+    //   target: new targets.CodePipeline(pipeline),
+    //   eventPattern: {
+    //     source: [sourceAction.variables.connectionArn],
+    //     detailType: ['GitHub Repository State Change'],
+    //     detail: {
+    //       referenceType: ['branch'],
+    //       referenceName: ['main'],
+    //       event: ['referenceUpdated'],
+    //     }
+    //   }
+    // })
 
     // const rule = new events.Rule(this, 'GitHubEventRule', {
     //   description: 'Rule that triggers the CodePipeline when a commit is pushed to the main branch on GitHub',
