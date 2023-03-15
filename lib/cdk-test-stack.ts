@@ -85,10 +85,10 @@ export class CdkTestStack extends cdk.Stack {
           jsonPath: "$.repository.full_name",
           matchEquals: "BogdanPopescu0209/uuuuuuuuuuuu",
         },
-        {
-          jsonPath: "$.ref",
-          matchEquals: "refs/heads/main",
-        }
+        // {
+        //   jsonPath: "$.ref",
+        //   matchEquals: "refs/heads/main",
+        // }
       ],
       targetAction: sourceAction.actionProperties.actionName,
       targetPipeline: pipeline.pipelineName,
