@@ -10,6 +10,8 @@ import { CfnOutput } from 'aws-cdk-lib';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as pipelines from 'aws-cdk-lib/pipelines';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import { BuildEnvironmentVariableType } from 'aws-cdk-lib/aws-codebuild';
 
 export class CdkTestStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -33,6 +35,9 @@ export class CdkTestStack extends cdk.Stack {
       trigger: codepipeline_actions.GitHubTrigger.WEBHOOK
     });
 
+    const existingBucket = s3.Bucket.fromBucketArn(this, 'bucket', 'arn:aws:s3:::my-bucket-sandbox');
+    const arnObjects = existingBucket.arnForObjects('*');
+  
     // const sourceAction =
     //   new codepipelineActions.CodeStarConnectionsSourceAction({
     //     actionName: "github",
@@ -56,6 +61,16 @@ export class CdkTestStack extends cdk.Stack {
     const buildAction = new codepipeline_actions.CodeBuildAction({
       actionName: 'CodeBuild',
       project: new codebuild.Project(this, 'CodeBuildProject', {
+        environmentVariables: {
+          MY_BUCKET: {
+            value: existingBucket.bucketName,
+            type: BuildEnvironmentVariableType.PLAINTEXT
+          },
+          ARN_OBJECTS: {
+            value: arnObjects,
+            type: BuildEnvironmentVariableType.PLAINTEXT
+          }
+        },
         projectName: 'your-codebuild-project-name',
         environment: {
           buildImage: codebuild.LinuxBuildImage.STANDARD_4_0,
@@ -67,6 +82,8 @@ export class CdkTestStack extends cdk.Stack {
               commands: [
                 'echo install',
                 'echo test install',
+                'echo $MY_BUCKET',
+                'echo $ARN_OBJECTS'
               ],
             },
             build: {
