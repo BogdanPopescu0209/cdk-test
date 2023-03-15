@@ -44,13 +44,13 @@ export class CdkTestStack extends cdk.Stack {
             install: {
               commands: [
                 'echo install',
-                'echi test install'
+                'echo test install'
               ],
             },
             build: {
               commands: [
                 'echo build',
-                'echi test build'
+                'echo test build'
               ],
             },
           }
