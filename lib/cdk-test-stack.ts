@@ -80,7 +80,8 @@ export class CdkTestStack extends cdk.Stack {
             install: {
               commands: [
                 'echo install',
-                'echo test install'
+                'echo test install',
+                'echo $wh'
               ],
             },
             build: {
