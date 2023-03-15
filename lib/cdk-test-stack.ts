@@ -83,14 +83,14 @@ export class CdkTestStack extends cdk.Stack {
         secretToken
       },
       filters: [
-        {
-          jsonPath: "$.repository.full_name",
-          matchEquals: "BogdanPopescu0209/uuuuuuuuuuuu",
-        },
         // {
-        //   jsonPath: "$.ref",
-        //   matchEquals: "refs/heads/main",
-        // }
+        //   jsonPath: "$.repository.full_name",
+        //   matchEquals: "BogdanPopescu0209/uuuuuuuuuuuu",
+        // },
+        {
+          jsonPath: "$.ref",
+          matchEquals: "refs/heads/main",
+        }
       ],
       targetAction: sourceAction.actionProperties.actionName,
       targetPipeline: pipeline.pipelineName,
@@ -129,12 +129,6 @@ export class CdkTestStack extends cdk.Stack {
     // const secretToken = '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';
 
     /// test
-
-    const message = 'Pipeline execution is in progress';
-    const logFilePath = path.join(process.cwd(), 'cdk.out', 'pipeline.log');
-    fs.appendFileSync(logFilePath, `${message}\n`);
-
-    console.log(message)
 
     new CfnOutput(this, "Github-Webhook-URL", {
       value: wh.attrUrl,
