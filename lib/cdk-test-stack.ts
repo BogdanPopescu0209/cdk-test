@@ -41,7 +41,7 @@ export class CDKTestStack extends cdk.Stack {
             "cfnStepFunction",
             {
                 roleArn: role.roleArn,
-                definitionString: fileToString.replace('environment', 'sandbox'),
+                definitionString: fileToString.replaceAll('environment', 'sandbox'),
                 stateMachineName: 'sandbox-parser',
             }
         );
