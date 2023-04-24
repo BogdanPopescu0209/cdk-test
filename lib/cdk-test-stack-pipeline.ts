@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as pipelines from 'aws-cdk-lib/pipelines';
+import { CollecpointIngressStage } from './cdk-test-stage';
 
 export class CdkTestStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -40,8 +41,8 @@ export class CdkTestStack extends cdk.Stack {
       })
     });
 
-    pipeline.addWave('sandbox');
-
+    const sandboxWave = pipeline.addWave('sandbox');
+    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}))
   }
 }
 
