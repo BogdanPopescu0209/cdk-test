@@ -3,6 +3,8 @@ import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
 import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks';
+import * as fs from 'fs';
+import { Role, ServicePrincipal, PolicyStatement, Effect, PolicyDocument } from 'aws-cdk-lib/aws-iam';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -19,10 +21,27 @@ export class CDKTestStack extends cdk.Stack {
             timeout: cdk.Duration.seconds(3)
         });
 
-        const stateMachine = new sfn.StateMachine(this, 'MyStateMachine', {
-            definition: new tasks.LambdaInvoke(this, "MyLambdaTask", {
-                lambdaFunction: helloFunction
-            }).next(new sfn.Succeed(this, "GreetedWorld"))
-        });
+        // const stateMachine = new sfn.StateMachine(this, 'MyStateMachine', {
+        //     definition: new tasks.LambdaInvoke(this, "MyLambdaTask", {
+        //         lambdaFunction: helloFunction
+        //     }).next(new sfn.Succeed(this, "GreetedWorld"))
+        // });
+
+        const file = fs.readFileSync("./stepfunction/stepfunction-parser.json");
+
+        const role = new Role(this, 'StepFunctionRole', {
+            assumedBy: new ServicePrincipal('states.amazonaws.com'),
+            description: 'Role for Step Functions to access other AWS services',
+          });
+
+        const stepFunction = new sfn.CfnStateMachine(
+            this,
+            "cfnStepFunction",
+            {
+              roleArn: role.roleArn,
+              definitionString: file.toString(),
+              stateMachineName: 'sandbox-parser',
+            }
+          );
     }
 }

@@ -1,0 +1,29 @@
+{
+  "StartAt": "MyLambdaTask",
+  "States": {
+    "MyLambdaTask": {
+      "Next": "GreetedWorld",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:eu-west-1:452280938609:function:sandbox-stage-CDKTestStag-MyLambdaFunction67CCA873-82SxR61k4o3C",
+        "Payload.$": "$"
+      }
+    },
+    "GreetedWorld": {
+      "Type": "Succeed"
+    }
+  }
+}
