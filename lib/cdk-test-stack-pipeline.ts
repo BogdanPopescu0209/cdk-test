@@ -26,7 +26,7 @@ export class CdkTestStack extends cdk.Stack {
       selfMutation: true,
       synth: new pipelines.ShellStep('Synth', {
         input: githubInput,
-        primaryOutputDirectory: './projects/cdk/cdk.out',
+        primaryOutputDirectory: './cdk.out',
         commands: [
           'npm install -g npm@8',
           'npm ci --include=dev',
