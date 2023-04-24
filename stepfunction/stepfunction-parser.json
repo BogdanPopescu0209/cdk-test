@@ -18,7 +18,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:eu-west-1:452280938609:function:sandbox-stage-CDKTestStag-MyLambdaFunction67CCA873-82SxR61k4o3C-environment",
+        "FunctionName": "arn:aws:lambda:eu-west-1:452280938609:function:sandbox-stage-CDKTestStag-MyLambdaFunction67CCA873-82SxR61k4o3C-$$environemnt$$",
         "Payload.$": "$"
       }
     },
