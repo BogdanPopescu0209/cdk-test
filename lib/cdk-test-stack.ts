@@ -32,16 +32,18 @@ export class CDKTestStack extends cdk.Stack {
         const role = new Role(this, 'StepFunctionRole', {
             assumedBy: new ServicePrincipal('states.amazonaws.com'),
             description: 'Role for Step Functions to access other AWS services',
-          });
+        });
+
+        const fileToString = file.toString();
 
         const stepFunction = new sfn.CfnStateMachine(
             this,
             "cfnStepFunction",
             {
-              roleArn: role.roleArn,
-              definitionString: file.toString(),
-              stateMachineName: 'sandbox-parser',
+                roleArn: role.roleArn,
+                definitionString: fileToString.replaceAll('environment', 'sandbox'),
+                stateMachineName: 'sandbox-parser',
             }
-          );
+        );
     }
 }
