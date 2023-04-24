@@ -29,6 +29,7 @@ export class CdkTestStack extends cdk.Stack {
         primaryOutputDirectory: './projects/cdk/cdk.out',
         commands: [
           'npm install -g npm@8',
+          'npm ci --include=dev',
           'npx cdk synth'
         ]
       })
