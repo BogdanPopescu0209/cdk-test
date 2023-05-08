@@ -39,7 +39,7 @@ export class CDKTestStack extends cdk.Stack {
 
         const listTables = async (): Promise<string[]> => (await dynamoDB.listTables().promise())?.TableNames || [];
 
-        const thing = listTables();
+        const thing = listTables().then(data => data);
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
