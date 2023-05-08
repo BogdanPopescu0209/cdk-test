@@ -23,13 +23,13 @@ export class CDKTestStack extends cdk.Stack {
 
         const dynamoDB = new db();
 
-        const tablesNAme = [] as any;
+        const tablesName = [] as any;
 
         dynamoDB.listTables(function (err, data) {
             if (err) {
                 console.log(err)
             } else {
-                tablesNAme.push(data.TableNames);
+                tablesName.push(data.TableNames);
                 console.log(data)
             }
         })
@@ -45,7 +45,7 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
             environment: {
-                THE_TABLES: tablesNAme.toString()
+                THE_TABLES: tablesName[0]
             }
         });
 
