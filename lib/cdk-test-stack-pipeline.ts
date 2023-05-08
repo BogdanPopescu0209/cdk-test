@@ -14,7 +14,7 @@ export class CdkTestStack extends cdk.Stack {
 
     const dynamoDBListTablesPolicy = new iam.PolicyStatement({
       resources: ['*'],
-      actions: ['dynamodb:ListTables'],
+      actions: ['dynamodb:ListTables', 'dynamodb:PutItem'],
       effect: iam.Effect.ALLOW
     })
 
