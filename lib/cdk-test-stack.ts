@@ -9,6 +9,7 @@ import * as db from 'aws-sdk/clients/dynamodb';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import { StreamEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -41,10 +42,12 @@ export class CDKTestStack extends cdk.Stack {
             effect: iam.Effect.ALLOW
         }));
 
-        helloFunction.addEventSourceMapping('MyMapping', {
-            eventSourceArn: 'arn:aws:dynamodb:eu-west-1:452280938609:table/sandbox-stage-CDKTestStage-MyTable794EDED1-12WURQD9CK2ZS/stream/2023-05-08T12:28:05.382',
-            batchSize: 100
-        });
+        helloFunction.addEventSource(new DynamoEventSource(table, {
+            startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+            batchSize: 5,
+            bisectBatchOnError: true,
+            retryAttempts: 10,
+          }));
 
         // const stateMachine = new sfn.StateMachine(this, 'MyStateMachine', {
         //     definition: new tasks.LambdaInvoke(this, "MyLambdaTask", {
