@@ -41,13 +41,25 @@ export class CDKTestStack extends cdk.Stack {
 
         // const thing = listTables().then(data => data);
 
-        async function getTableNames() {
-            const dynamodb = new AWS.DynamoDB();
-            const data = await dynamodb.listTables().promise();
-            return data.TableNames;
-        }
+        // async function getTableNames() {
+        //     const dynamodb = new AWS.DynamoDB();
+        //     const data = await dynamodb.listTables().promise();
+        //     return data.TableNames;
+        // }
 
-        const thing = getTableNames().then(tableNames => { return tableNames });
+        // const thing = getTableNames().then(tableNames => { return tableNames });
+
+        const dynamodb = new AWS.DynamoDB();
+
+        const thing = new Promise((resolve, reject) => {
+            dynamodb.listTables(function (err, data) {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(data.TableNames)
+                }
+            })
+        })
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
