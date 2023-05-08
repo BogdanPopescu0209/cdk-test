@@ -42,7 +42,7 @@ export class CDKTestStack extends cdk.Stack {
         }));
 
         helloFunction.addEventSourceMapping('MyMapping', {
-            eventSourceArn: table.tableStreamArn,
+            eventSourceArn: 'arn:aws:dynamodb:eu-west-1:452280938609:table/sandbox-stage-CDKTestStage-MyTable794EDED1-12WURQD9CK2ZS/stream/2023-05-08T12:28:05.382',
             batchSize: 100
         });
 
