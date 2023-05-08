@@ -5,7 +5,8 @@ import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
 import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import * as fs from 'fs';
 import { Role, ServicePrincipal, PolicyStatement, Effect, PolicyDocument } from 'aws-cdk-lib/aws-iam';
-import * as dynamodb from 'aws-sdk/clients/dynamodb';
+import * as db from 'aws-sdk/clients/dynamodb';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -47,10 +48,9 @@ export class CDKTestStack extends cdk.Stack {
         //     }
         // );
 
-        helloFunction.addEventSourceMapping('MyMapping', {
-            eventSourceArn: 'arn:aws:dynamodb:eu-west-1:452280938609:table/v2_collectpoint_dpd_private',
-            batchSize: 100
-        });
+        const existingTable = dynamodb.Table.fromTableArn(this, 'MyTable', 'arn:aws:dynamodb:eu-west-1:452280938609:table/v2_collectpoint_dpd_private');
+        
+        existingTable.grantStreamRead(helloFunction);
 
         // const dynamoDB = new dynamodb();
 
