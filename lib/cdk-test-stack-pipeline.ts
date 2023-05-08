@@ -12,16 +12,16 @@ export class CdkTestStack extends cdk.Stack {
       connectionArn: 'arn:aws:codestar-connections:eu-west-1:452280938609:connection/bebcb069-0d3c-48d9-8fc4-750e94c5be20'
     });
 
-    // const myRole = new iam.Role(this, 'MyRole', {
-    //   roleName: 'MyRoleName',
-    //   assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com'),
-    // });
+    const myRole = new iam.Role(this, 'MyRole', {
+      roleName: 'MyRoleName',
+      assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com'),
+    });
 
-    // myRole.addToPolicy(new iam.PolicyStatement({
-    //   resources: ['*'],
-    //   actions: ['dynamodb:ListTables'],
-    //   effect: iam.Effect.ALLOW
-    // }));
+    myRole.addToPolicy(new iam.PolicyStatement({
+      resources: ['*'],
+      actions: ['dynamodb:ListTables'],
+      effect: iam.Effect.ALLOW
+    }));
 
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       pipelineName: 'CDK-test-pipeline',
@@ -44,7 +44,8 @@ export class CdkTestStack extends cdk.Stack {
           'npm ci --include=dev',
           'npx cdk synth'
         ],
-      })
+      }),
+      role: myRole
     });
 
     const sandboxWave = pipeline.addWave('sandbox');
