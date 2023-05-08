@@ -12,12 +12,19 @@ export class CdkTestStack extends cdk.Stack {
       connectionArn: 'arn:aws:codestar-connections:eu-west-1:452280938609:connection/bebcb069-0d3c-48d9-8fc4-750e94c5be20'
     });
 
+    const dynamoDBListTablesPolicy = new iam.PolicyStatement({
+      resources: ['*'],
+      actions: ['dynamodb:ListTables'],
+      effect: iam.Effect.ALLOW
+    })
+
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       pipelineName: 'CDK-test-pipeline',
       codeBuildDefaults: {
         buildEnvironment: {
           privileged: true
         },
+        rolePolicy: [dynamoDBListTablesPolicy]
       },
       synthCodeBuildDefaults: {
         buildEnvironment: {
@@ -35,14 +42,6 @@ export class CdkTestStack extends cdk.Stack {
         ],
       })
     });
-
-    const dynamoDBListTablesPolicy = new iam.PolicyStatement({
-      resources: ['*'],
-      actions: ['dynamodb:ListTables'],
-      effect: iam.Effect.ALLOW
-    });
-
-    pipeline.pipeline.addToRolePolicy(dynamoDBListTablesPolicy);
 
     const sandboxWave = pipeline.addWave('sandbox');
     sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}))
