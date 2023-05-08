@@ -45,7 +45,7 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
             environment: {
-                THE_TABLES: tablesNAme
+                THE_TABLES: tablesNAme.toString()
             }
         });
 
