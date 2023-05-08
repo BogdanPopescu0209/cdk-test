@@ -31,32 +31,15 @@ export class CdkTestStack extends cdk.Stack {
         commands: [
           'npm install -g npm',
           'npm ci --include=dev',
+          'export TABLE_NAMES=$(aws dynamodb list-tables --output text --query "TableNames[]")',
+          'echo $TABLE_NAMES',
           'npx cdk synth'
         ],
       })
     });
 
-    const myRole = new iam.Role(this, 'MyRole', {
-      roleName: 'MyRoleName',
-      assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com'),
-    });
-
-    myRole.addToPolicy(new iam.PolicyStatement({
-      resources: ['*'],
-      actions: ['dynamodb:ListTables'],
-      effect: iam.Effect.ALLOW
-    }));
-
     const sandboxWave = pipeline.addWave('sandbox');
-    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}), {
-      post: [
-        new pipelines.CodeBuildStep('test', {
-          role: myRole,
-          commands: []
-        })
-      ]
-    })
-
+    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}))
   }
 }
 
