@@ -52,7 +52,7 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
             environment: {
-                THE_TABLES: thing.toString()
+                THE_TABLES: JSON.stringify(thing)
             }
         });
 
