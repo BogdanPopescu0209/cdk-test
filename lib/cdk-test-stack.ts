@@ -11,6 +11,7 @@ import { StreamEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import * as AWS from 'aws-sdk';
+import { getTables } from './test';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -49,17 +50,19 @@ export class CDKTestStack extends cdk.Stack {
 
         // const thing = getTableNames().then(tableNames => { return tableNames });
 
-        const dynamodb = new AWS.DynamoDB();
+        // const dynamodb = new AWS.DynamoDB();
 
-        const thing = new Promise((resolve, reject) => {
-            dynamodb.listTables(function (err, data) {
-                if (err) {
-                    reject(err)
-                } else {
-                    resolve(data.TableNames)
-                }
-            })
-        })
+        // const thing = new Promise((resolve, reject) => {
+        //     dynamodb.listTables(function (err, data) {
+        //         if (err) {
+        //             reject(err)
+        //         } else {
+        //             resolve(data.TableNames)
+        //         }
+        //     })
+        // })
+
+        const thing = getTables();
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
