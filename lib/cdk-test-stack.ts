@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import { Role, ServicePrincipal, PolicyStatement, Effect, PolicyDocument } from 'aws-cdk-lib/aws-iam';
 import * as db from 'aws-sdk/clients/dynamodb';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import { StreamEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -48,10 +49,9 @@ export class CDKTestStack extends cdk.Stack {
         //     }
         // );
 
-        const existingTable = dynamodb.Table.fromTableArn(this, 'MyTable', 'arn:aws:dynamodb:eu-west-1:452280938609:table/v2_collectpoint_dpd_private');
+        const existingTable = dynamodb.Table.fromTableName(this, 'v2_collectpoint_dpd_private', 'v2_collectpoint_dpd_private');
         
         existingTable.grantStream(helloFunction);
-        //existingTable.grantStreamRead(helloFunction);
 
         // const dynamoDB = new dynamodb();
 
