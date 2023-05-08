@@ -43,7 +43,7 @@ export class CdkTestStack extends cdk.Stack {
       post: [
         new pipelines.CodeBuildStep('unit', {
           env: {
-            THE_TEST: 'Here is the test'
+            "THE_TEST": 'Here is the test'
           },
           commands:
             [
