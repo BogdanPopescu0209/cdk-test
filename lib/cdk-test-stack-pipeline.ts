@@ -36,9 +36,27 @@ export class CdkTestStack extends cdk.Stack {
       })
     });
 
+    const myRole = new iam.Role(this, 'MyRole', {
+      roleName: 'MyRoleName',
+      assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com'),
+    });
+
+    myRole.addToPolicy(new iam.PolicyStatement({
+      resources: ['*'],
+      actions: ['dynamodb:ListTables'],
+      effect: iam.Effect.ALLOW
+    }));
+
     const sandboxWave = pipeline.addWave('sandbox');
-    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}), { post: []})
-    
+    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}), {
+      post: [
+        new pipelines.CodeBuildStep('test', {
+          role: myRole,
+          commands: []
+        })
+      ]
+    })
+
   }
 }
 
