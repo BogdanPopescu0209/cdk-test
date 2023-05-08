@@ -16,7 +16,7 @@ export class CDKTestStack extends cdk.Stack {
 
         const table = new dynamodb.Table(this, 'MyTable', {
             partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
-            stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
+            stream: dynamodb.StreamViewType.NEW_IMAGE,
         });
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
@@ -30,15 +30,15 @@ export class CDKTestStack extends cdk.Stack {
             timeout: cdk.Duration.seconds(3)
         });
 
-        helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
-            resources: [
-                '*'],
-            actions: [
-                "dynamodb:GetShardIterator",
-                "dynamodb:DescribeStream",
-                "dynamodb:GetRecords"],
-            effect: iam.Effect.ALLOW
-        }));
+        // helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
+        //     resources: [
+        //         table.tableArn + '/stream/*'],
+        //     actions: [
+        //         "dynamodb:GetShardIterator",
+        //         "dynamodb:DescribeStream",
+        //         "dynamodb:GetRecords"],
+        //     effect: iam.Effect.ALLOW
+        // }));
 
         table.grantStream(helloFunction);
 
