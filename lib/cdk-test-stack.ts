@@ -79,17 +79,17 @@ export class CDKTestStack extends cdk.Stack {
 
         // existingTable.grantStream(helloFunction);
 
-        const dynamoDB = new db();
+        // const dynamoDB = new db();
 
-        //const stack = this;
+        // //const stack = this;
 
-        dynamoDB.listTables(function (err, data) {
-            if (err) {
-                console.log(err)
-            } else {
-                console.log(data)
-            }
-        })
+        // dynamoDB.listTables(function (err, data) {
+        //     if (err) {
+        //         console.log(err)
+        //     } else {
+        //         console.log(data)
+        //     }
+        // })
 
         // dynamoDB.listTables(function (err, data) {
         //     if (err) {
