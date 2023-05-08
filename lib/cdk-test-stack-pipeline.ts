@@ -31,27 +31,13 @@ export class CdkTestStack extends cdk.Stack {
         commands: [
           'npm install -g npm',
           'npm ci --include=dev',
-          'export TABLE_NAMES=$(aws dynamodb list-tables --output text --query "TableNames[]")',
-          'echo $TABLE_NAMES',
           'npx cdk synth'
         ],
       })
     });
 
     const sandboxWave = pipeline.addWave('sandbox');
-    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}), {
-      post: [
-        new pipelines.CodeBuildStep('unit', {
-          env: {
-            "THE_TEST": 'Here is the test'
-          },
-          commands:
-            [
-              'echo $THE_TEST'
-            ]
-        })
-      ]
-    })
+    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}))
   }
 }
 
