@@ -8,7 +8,7 @@ export async function getTables() {
             if (err) {
                 reject(err)
             } else {
-                resolve(data.TableNames)
+                resolve(data)
             }
         })
     })
