@@ -47,26 +47,31 @@ export class CDKTestStack extends cdk.Stack {
         //     }
         // );
 
-        const dynamoDB = new dynamodb();
-
-        dynamoDB.listTables(function (err, data) {
-            if (err) err;
-            else {
-                data.TableNames?.forEach((tableName) => {
-                    dynamoDB.describeTable({ TableName: tableName }, function (err, data) {
-                        if (err) err;
-                        else {
-                            //if (tableName === 'v2_collectpoint_ups') {
-                            helloFunction.addEventSourceMapping('MyMapping', {
-                                eventSourceArn: data.Table?.TableArn,
-                                batchSize: 100
-                            });
-                            //}
-                        };
-                    });
-                });
-            };
+        helloFunction.addEventSourceMapping('MyMapping', {
+            eventSourceArn: 'arn:aws:dynamodb:eu-west-1:452280938609:table/v2_collectpoint_dpd_private',
+            batchSize: 100
         });
+
+        // const dynamoDB = new dynamodb();
+
+        // dynamoDB.listTables(function (err, data) {
+        //     if (err) err;
+        //     else {
+        //         data.TableNames?.forEach((tableName) => {
+        //             dynamoDB.describeTable({ TableName: tableName }, function (err, data) {
+        //                 if (err) err;
+        //                 else {
+        //                     //if (tableName === 'v2_collectpoint_ups') {
+        //                     helloFunction.addEventSourceMapping('MyMapping', {
+        //                         eventSourceArn: data.Table?.TableArn,
+        //                         batchSize: 100
+        //                     });
+        //                     //}
+        //                 };
+        //             });
+        //         });
+        //     };
+        // });
 
     }
 }
