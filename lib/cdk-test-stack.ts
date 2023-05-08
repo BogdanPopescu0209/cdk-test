@@ -20,6 +20,8 @@ export class CDKTestStack extends cdk.Stack {
         //     stream: dynamodb.StreamViewType.NEW_IMAGE,
         // });
 
+        const theTest = process.env.THE_TEST || 'no';
+
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
                 exports.handler = (event) => {
@@ -29,7 +31,10 @@ export class CDKTestStack extends cdk.Stack {
             `),
             runtime: lambda.Runtime.NODEJS_16_X,
             handler: "index.handler",
-            timeout: cdk.Duration.seconds(3)
+            timeout: cdk.Duration.seconds(3),
+            environment: {
+                THE_TEST: theTest
+            }
         });
 
         helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({

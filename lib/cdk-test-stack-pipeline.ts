@@ -39,7 +39,19 @@ export class CdkTestStack extends cdk.Stack {
     });
 
     const sandboxWave = pipeline.addWave('sandbox');
-    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}))
+    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}), {
+      post: [
+        new pipelines.CodeBuildStep('unit', {
+          env: {
+            THE_TEST: 'Here is the test'
+          },
+          commands:
+            [
+              'echo $THE_TEST'
+            ]
+        })
+      ]
+    })
   }
 }
 
