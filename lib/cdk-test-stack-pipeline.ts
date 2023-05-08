@@ -23,13 +23,13 @@ export class CdkTestStack extends cdk.Stack {
       codeBuildDefaults: {
         buildEnvironment: {
           privileged: true
-        },
-        rolePolicy: [dynamoDBListTablesPolicy]
+        }
       },
       synthCodeBuildDefaults: {
         buildEnvironment: {
           privileged: true
-        }
+        },
+        rolePolicy: [dynamoDBListTablesPolicy]
       },
       selfMutation: true,
       synth: new pipelines.ShellStep('Synth', {
