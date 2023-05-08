@@ -42,12 +42,12 @@ export class CDKTestStack extends cdk.Stack {
             effect: iam.Effect.ALLOW
         }));
 
-        helloFunction.addEventSource(new DynamoEventSource(table, {
-            startingPosition: lambda.StartingPosition.TRIM_HORIZON,
-            batchSize: 5,
-            bisectBatchOnError: true,
-            retryAttempts: 10,
-        }));
+        // helloFunction.addEventSource(new DynamoEventSource(table, {
+        //     startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+        //     batchSize: 5,
+        //     bisectBatchOnError: true,
+        //     retryAttempts: 10,
+        // }));
 
         // const stateMachine = new sfn.StateMachine(this, 'MyStateMachine', {
         //     definition: new tasks.LambdaInvoke(this, "MyLambdaTask", {
