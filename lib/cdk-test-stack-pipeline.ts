@@ -22,6 +22,7 @@ export class CdkTestStack extends cdk.Stack {
       actions: ['dynamodb:ListTables'],
       effect: iam.Effect.ALLOW
     }));
+    
 
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       pipelineName: 'CDK-test-pipeline',
