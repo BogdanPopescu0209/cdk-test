@@ -81,19 +81,15 @@ export class CDKTestStack extends cdk.Stack {
 
         const dynamoDB = new db();
 
-        const stack = this;
+        //const stack = this;
 
-        const tableNames = new Promise((resolve, reject) => {
-            dynamoDB.listTables(function (err, data) {
-                if (err) {
-                    reject(err)
-                } else {
-                    resolve(data)
-                }
-            })
+        dynamoDB.listTables(function (err, data) {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log(data)
+            }
         })
-
-        console.log('hereeee', JSON.stringify(tableNames))
 
         // dynamoDB.listTables(function (err, data) {
         //     if (err) {
