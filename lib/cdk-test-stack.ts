@@ -14,10 +14,10 @@ export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
         super(scope, id, props);
 
-        // const table = new dynamodb.Table(this, 'MyTable', {
-        //     partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
-        //     stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
-        // });
+        const table = new dynamodb.Table(this, 'MyTable', {
+            partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+            stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
+        });
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
@@ -30,17 +30,17 @@ export class CDKTestStack extends cdk.Stack {
             timeout: cdk.Duration.seconds(3)
         });
 
-        // helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
-        //     resources: [
-        //         table.tableArn + '/stream/*'],
-        //     actions: [
-        //         "dynamodb:GetShardIterator",
-        //         "dynamodb:DescribeStream",
-        //         "dynamodb:GetRecords"],
-        //     effect: iam.Effect.ALLOW
-        // }));
+        helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
+            resources: [
+                '*'],
+            actions: [
+                "dynamodb:GetShardIterator",
+                "dynamodb:DescribeStream",
+                "dynamodb:GetRecords"],
+            effect: iam.Effect.ALLOW
+        }));
 
-        // table.grantStream(helloFunction);
+        table.grantStream(helloFunction);
 
         // const stateMachine = new sfn.StateMachine(this, 'MyStateMachine', {
         //     definition: new tasks.LambdaInvoke(this, "MyLambdaTask", {
