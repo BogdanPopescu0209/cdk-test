@@ -23,21 +23,23 @@ export class CDKTestStack extends cdk.Stack {
 
         const dynamoDB = new db();
 
-        const tablesName = [] as any;
+        // const tablesName = [] as any;
 
-        dynamoDB.listTables(function (err, data) {
-            if (err) {
-                tablesName.push(err);
-            } else {
-                tablesName.push(data.TableNames);
-            }
-        })
+        // dynamoDB.listTables(function (err, data) {
+        //     if (err) {
+        //         tablesName.push(err);
+        //     } else {
+        //         tablesName.push(data.TableNames);
+        //     }
+        // })
 
-        function theTest() {
-            return 'the thing'
-        }
+        // async function theTest() {
+        //     await dynamoDB.listTables().promise())?.tablesName || []
+        // }
 
-        const thing = theTest()
+        const listTables = async (): Promise<string[]> => (await dynamoDB.listTables().promise())?.TableNames || [];
+
+        const thing = listTables();
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
@@ -50,8 +52,7 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
             environment: {
-                THE_TABLES: tablesName.toString(),
-                THE_THING: thing
+                THE_TABLES: thing.toString()
             }
         });
 
