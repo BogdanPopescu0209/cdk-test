@@ -1,15 +1,15 @@
 import * as AWS from 'aws-sdk';
 
 export async function getTables() {
-    const dynamodb = new AWS.DynamoDB();
+    const dynamodb = new AWS.DynamoDB({ region: 'eu-west-1' });
 
-    const params = {
-        TableName: 'my_special_table',
-        Item: {
-            'id': { S: '1234' },
-            'address': { S: 'John Doe' }
-        }
-    };
+    // const params = {
+    //     TableName: 'my_special_table',
+    //     Item: {
+    //         'id': { S: '1234' },
+    //         'address': { S: 'John Doe' }
+    //     }
+    // };
 
     dynamodb.putItem()
 
@@ -23,13 +23,13 @@ export async function getTables() {
         })
     })
 
-    dynamodb.putItem(params, function (err, data) {
-        if (err) {
-            console.log('Error', err);
-        } else {
-            console.log('Item added successfully', data);
-        }
-    });
+    // dynamodb.putItem(params, function (err, data) {
+    //     if (err) {
+    //         console.log('Error', err);
+    //     } else {
+    //         console.log('Item added successfully', data);
+    //     }
+    // });
 
     return thing;
 }
