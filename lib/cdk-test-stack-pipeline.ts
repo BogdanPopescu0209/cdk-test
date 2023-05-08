@@ -22,6 +22,7 @@ export class CdkTestStack extends cdk.Stack {
       resources: ['*'],
     }));
 
+    
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       pipelineName: 'CDK-test-pipeline',
       codeBuildDefaults: {
