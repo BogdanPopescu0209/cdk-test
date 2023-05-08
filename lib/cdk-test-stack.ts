@@ -5,6 +5,7 @@ import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
 import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import * as fs from 'fs';
 import { Role, ServicePrincipal, PolicyStatement, Effect, PolicyDocument } from 'aws-cdk-lib/aws-iam';
+import * as dynamodb from 'aws-sdk/clients/dynamodb';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -27,23 +28,45 @@ export class CDKTestStack extends cdk.Stack {
         //     }).next(new sfn.Succeed(this, "GreetedWorld"))
         // });
 
-        const file = fs.readFileSync("./stepfunction/stepfunction-parser.json");
+        // const file = fs.readFileSync("./stepfunction/stepfunction-parser.json");
 
-        const role = new Role(this, 'StepFunctionRole', {
-            assumedBy: new ServicePrincipal('states.amazonaws.com'),
-            description: 'Role for Step Functions to access other AWS services',
+        // const role = new Role(this, 'StepFunctionRole', {
+        //     assumedBy: new ServicePrincipal('states.amazonaws.com'),
+        //     description: 'Role for Step Functions to access other AWS services',
+        // });
+
+        // const fileToString = file.toString();
+
+        // const stepFunction = new sfn.CfnStateMachine(
+        //     this,
+        //     "cfnStepFunction",
+        //     {
+        //         roleArn: role.roleArn,
+        //         definitionString: fileToString.replace(new RegExp('\\$\\$environment\\$\\$', 'g'), 'sandbox'),
+        //         stateMachineName: 'sandbox-parser',
+        //     }
+        // );
+
+        const dynamoDB = new dynamodb();
+
+        dynamoDB.listTables(function (err, data) {
+            if (err) err;
+            else {
+                data.TableNames?.forEach((tableName) => {
+                    dynamoDB.describeTable({ TableName: tableName }, function (err, data) {
+                        if (err) err;
+                        else {
+                            if (tableName === 'collectpoint-v2-evri-sandbox') {
+                                helloFunction.addEventSourceMapping('MyMapping', {
+                                    eventSourceArn: data.Table?.TableArn,
+                                    batchSize: 100
+                                });
+                            }
+                        };
+                    });
+                });
+            };
         });
 
-        const fileToString = file.toString();
-
-        const stepFunction = new sfn.CfnStateMachine(
-            this,
-            "cfnStepFunction",
-            {
-                roleArn: role.roleArn,
-                definitionString: fileToString.replace(new RegExp('\\$\\$environment\\$\\$', 'g'), 'sandbox'),
-                stateMachineName: 'sandbox-parser',
-            }
-        );
     }
 }
