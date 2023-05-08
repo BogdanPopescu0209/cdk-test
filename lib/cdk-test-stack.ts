@@ -50,22 +50,25 @@ export class CDKTestStack extends cdk.Stack {
         const dynamoDB = new dynamodb();
 
         dynamoDB.listTables(function (err, data) {
-            if (err) err;
-            else {
-                data.TableNames?.forEach((tableName) => {
-                    dynamoDB.describeTable({ TableName: tableName }, function (err, data) {
-                        if (err) err;
-                        else {
-                            if (tableName === 'v2_collectpoint_ups') {
-                                helloFunction.addEventSourceMapping('MyMapping', {
-                                    eventSourceArn: data.Table?.TableArn,
-                                    batchSize: 100
-                                });
-                            }
-                        };
-                    });
-                });
-            };
+            if (err) console.log(err);
+            else
+                console.log(data);
+            // if (err) err;
+            // else {
+            //     data.TableNames?.forEach((tableName) => {
+            //         dynamoDB.describeTable({ TableName: tableName }, function (err, data) {
+            //             if (err) err;
+            //             else {
+            //                 if (tableName === 'v2_collectpoint_ups') {
+            //                     helloFunction.addEventSourceMapping('MyMapping', {
+            //                         eventSourceArn: data.Table?.TableArn,
+            //                         batchSize: 100
+            //                     });
+            //                 }
+            //             };
+            //         });
+            //     });
+            // };
         });
 
     }
