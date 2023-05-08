@@ -23,6 +23,7 @@ export class CDKTestStack extends cdk.Stack {
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
                 exports.handler = (event) => {
+                    console.log(event);
                     console.log("Hello World!");
                 };
             `),
@@ -82,24 +83,48 @@ export class CDKTestStack extends cdk.Stack {
 
         const stack = this;
 
-        dynamoDB.listTables(function (err, data) {
-            if (err) {
-                console.error(err);
-            } else {
-                const tableNames = data.TableNames || [];
-                const tables = tableNames.map(tableName => {
-                    return dynamodb.Table.fromTableName(stack, tableName, tableName);
-                });
+        const tableNames = new Promise((resolve, reject) => {
+            dynamoDB.listTables(function (err, data) {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(data)
+                }
+            })
+        })
 
-                tables.forEach(table => {
-                    helloFunction.addEventSource(new DynamoEventSource(table, {
-                        startingPosition: lambda.StartingPosition.TRIM_HORIZON,
-                        batchSize: 5,
-                        bisectBatchOnError: true,
-                        retryAttempts: 10,
-                    }));
-                });
-            }
+        const testNames = tableNames as any || [];
+        const names = testNames.map((tableName: string) => {
+            return dynamodb.Table.fromTableName(stack, tableName, tableName);
         });
+
+        names.forEach((table: any) => {
+            helloFunction.addEventSource(new DynamoEventSource(table, {
+                startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+                batchSize: 5,
+                bisectBatchOnError: true,
+                retryAttempts: 10,
+            }));
+        });
+
+        // dynamoDB.listTables(function (err, data) {
+        //     if (err) {
+        //         console.error(err);
+        //     } else {
+        //         const tableNames = data.TableNames || [];
+        //         const tables = tableNames.map(tableName => {
+        //             return dynamodb.Table.fromTableName(stack, tableName, tableName);
+        //         });
+
+        //         tables.forEach(table => {
+        //             helloFunction.addEventSource(new DynamoEventSource(table, {
+        //                 startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+        //                 batchSize: 5,
+        //                 bisectBatchOnError: true,
+        //                 retryAttempts: 10,
+        //             }));
+        //         });
+        //     }
+        // });
     }
 }
