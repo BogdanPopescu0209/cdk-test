@@ -15,10 +15,10 @@ export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
         super(scope, id, props);
 
-        const table = new dynamodb.Table(this, 'MyTable', {
-            partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
-            stream: dynamodb.StreamViewType.NEW_IMAGE,
-        });
+        // const table = new dynamodb.Table(this, 'MyTable', {
+        //     partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+        //     stream: dynamodb.StreamViewType.NEW_IMAGE,
+        // });
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
@@ -79,17 +79,17 @@ export class CDKTestStack extends cdk.Stack {
 
         // existingTable.grantStream(helloFunction);
 
-        // const dynamoDB = new db();
+        const dynamoDB = new db();
 
         // //const stack = this;
 
-        // dynamoDB.listTables(function (err, data) {
-        //     if (err) {
-        //         console.log(err)
-        //     } else {
-        //         console.log(data)
-        //     }
-        // })
+        dynamoDB.listTables(function (err, data) {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log(data)
+            }
+        })
 
         // dynamoDB.listTables(function (err, data) {
         //     if (err) {
