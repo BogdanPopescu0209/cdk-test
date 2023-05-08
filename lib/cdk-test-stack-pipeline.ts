@@ -14,7 +14,7 @@ export class CdkTestStack extends cdk.Stack {
 
     const myRole = new iam.Role(this, 'MyRole', {
       roleName: 'MyRoleName',
-      assumedBy: new iam.ServicePrincipal('codepipeline.amazonaws.com'),
+      assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com'),
     });
 
     myRole.addToPolicy(new iam.PolicyStatement({
@@ -22,7 +22,6 @@ export class CdkTestStack extends cdk.Stack {
       actions: ['dynamodb:ListTables'],
       effect: iam.Effect.ALLOW
     }));
-    
 
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       pipelineName: 'CDK-test-pipeline',
