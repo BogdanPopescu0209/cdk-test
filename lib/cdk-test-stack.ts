@@ -41,7 +41,10 @@ export class CDKTestStack extends cdk.Stack {
             effect: iam.Effect.ALLOW
         }));
 
-        //table.grantStream(helloFunction);
+        helloFunction.addEventSourceMapping('MyMapping', {
+            eventSourceArn: table.tableArn,
+            batchSize: 100
+        });
 
         // const stateMachine = new sfn.StateMachine(this, 'MyStateMachine', {
         //     definition: new tasks.LambdaInvoke(this, "MyLambdaTask", {
