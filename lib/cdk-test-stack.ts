@@ -50,8 +50,8 @@ export class CDKTestStack extends cdk.Stack {
 
         const existingTable = dynamodb.Table.fromTableArn(this, 'MyTable', 'arn:aws:dynamodb:eu-west-1:452280938609:table/v2_collectpoint_dpd_private');
         
-        
-        existingTable.grantStreamRead(helloFunction);
+        existingTable.grantStream(helloFunction);
+        //existingTable.grantStreamRead(helloFunction);
 
         // const dynamoDB = new dynamodb();
 
