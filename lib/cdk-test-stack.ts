@@ -42,7 +42,7 @@ export class CDKTestStack extends cdk.Stack {
         }));
 
         helloFunction.addEventSourceMapping('MyMapping', {
-            eventSourceArn: table.tableArn,
+            eventSourceArn: table.tableStreamArn,
             batchSize: 100
         });
 
