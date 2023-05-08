@@ -8,10 +8,16 @@ import { Role, ServicePrincipal, PolicyStatement, Effect, PolicyDocument } from 
 import * as db from 'aws-sdk/clients/dynamodb';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import { StreamEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+import * as iam from 'aws-cdk-lib/aws-iam';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
         super(scope, id, props);
+
+        const table = new dynamodb.Table(this, 'MyTable', {
+            partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+            stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
+        });
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
@@ -23,6 +29,18 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3)
         });
+
+        helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
+            resources: [
+                table.tableArn + '/stream/*'],
+            actions: [
+                "dynamodb:GetShardIterator",
+                "dynamodb:DescribeStream",
+                "dynamodb:GetRecords"],
+            effect: iam.Effect.ALLOW
+        }));
+
+        table.grantStream(helloFunction);
 
         // const stateMachine = new sfn.StateMachine(this, 'MyStateMachine', {
         //     definition: new tasks.LambdaInvoke(this, "MyLambdaTask", {
@@ -49,9 +67,9 @@ export class CDKTestStack extends cdk.Stack {
         //     }
         // );
 
-        const existingTable = dynamodb.Table.fromTableName(this, 'v2_collectpoint_dpd_private', 'v2_collectpoint_dpd_private');
-        
-        existingTable.grantStream(helloFunction);
+        // const existingTable = dynamodb.Table.fromTableName(this, 'v2_collectpoint_dpd_private', 'v2_collectpoint_dpd_private');
+
+        // existingTable.grantStream(helloFunction);
 
         // const dynamoDB = new dynamodb();
 
