@@ -21,6 +21,19 @@ export class CDKTestStack extends cdk.Stack {
         //     stream: dynamodb.StreamViewType.NEW_IMAGE,
         // });
 
+        const dynamoDB = new db();
+
+        const tablesNAme = [] as any;
+
+        dynamoDB.listTables(function (err, data) {
+            if (err) {
+                console.log(err)
+            } else {
+                tablesNAme.push(data.TableNames);
+                console.log(data)
+            }
+        })
+
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
                 exports.handler = (event) => {
@@ -30,7 +43,10 @@ export class CDKTestStack extends cdk.Stack {
             `),
             runtime: lambda.Runtime.NODEJS_16_X,
             handler: "index.handler",
-            timeout: cdk.Duration.seconds(3)
+            timeout: cdk.Duration.seconds(3),
+            environment: {
+                THE_TABLES: tablesNAme
+            }
         });
 
         helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
@@ -80,18 +96,6 @@ export class CDKTestStack extends cdk.Stack {
         // const existingTable = dynamodb.Table.fromTableName(this, 'v2_collectpoint_dpd_private', 'v2_collectpoint_dpd_private');
 
         // existingTable.grantStream(helloFunction);
-
-        //const dynamoDB = new db();
-
-        // //const stack = this;
-
-        // dynamoDB.listTables(function (err, data) {
-        //     if (err) {
-        //         console.log(err)
-        //     } else {
-        //         console.log(data)
-        //     }
-        // })
 
         // dynamoDB.listTables(function (err, data) {
         //     if (err) {

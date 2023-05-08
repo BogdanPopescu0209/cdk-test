@@ -17,7 +17,7 @@ export class CdkTestStack extends cdk.Stack {
       codeBuildDefaults: {
         buildEnvironment: {
           privileged: true
-        }
+        },
       },
       synthCodeBuildDefaults: {
         buildEnvironment: {
@@ -35,6 +35,14 @@ export class CdkTestStack extends cdk.Stack {
         ],
       })
     });
+
+    const dynamoDBListTablesPolicy = new iam.PolicyStatement({
+      resources: ['*'],
+      actions: ['dynamodb:ListTables'],
+      effect: iam.Effect.ALLOW
+    });
+
+    pipeline.pipeline.addToRolePolicy(dynamoDBListTablesPolicy);
 
     const sandboxWave = pipeline.addWave('sandbox');
     sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}))
