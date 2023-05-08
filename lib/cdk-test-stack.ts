@@ -11,7 +11,7 @@ export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
         super(scope, id, props);
 
-        const helloFunction = new lambda.Function(this, 'MyLambdaFunction', {
+        const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
                 exports.handler = (event) => {
                     console.log("Hello World!");
@@ -56,7 +56,7 @@ export class CDKTestStack extends cdk.Stack {
                     dynamoDB.describeTable({ TableName: tableName }, function (err, data) {
                         if (err) err;
                         else {
-                            if (tableName === 'collectpoint-v2-evri-sandbox') {
+                            if (tableName === 'v2_collectpoint_ups') {
                                 helloFunction.addEventSourceMapping('MyMapping', {
                                     eventSourceArn: data.Table?.TableArn,
                                     batchSize: 100

@@ -29,7 +29,6 @@ export class CdkTestStack extends cdk.Stack {
         primaryOutputDirectory: './cdk.out',
         commands: [
           'npm install -g npm',
-          'npm i aws-sdk',
           'npm ci --include=dev',
           'npx cdk synth'
         ]
