@@ -18,11 +18,11 @@ export class CdkTestStack extends cdk.Stack {
     });
 
     myRole.addToPolicy(new iam.PolicyStatement({
-      actions: ['dynamodb:ListTables'],
       resources: ['*'],
+      actions: ['dynamodb:ListTables'],
+      effect: iam.Effect.ALLOW
     }));
 
-    
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       pipelineName: 'CDK-test-pipeline',
       codeBuildDefaults: {
