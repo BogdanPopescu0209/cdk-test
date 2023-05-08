@@ -47,7 +47,7 @@ export class CDKTestStack extends cdk.Stack {
             batchSize: 5,
             bisectBatchOnError: true,
             retryAttempts: 10,
-          }));
+        }));
 
         // const stateMachine = new sfn.StateMachine(this, 'MyStateMachine', {
         //     definition: new tasks.LambdaInvoke(this, "MyLambdaTask", {
@@ -78,26 +78,28 @@ export class CDKTestStack extends cdk.Stack {
 
         // existingTable.grantStream(helloFunction);
 
-        // const dynamoDB = new dynamodb();
+        const dynamoDB = new db();
 
-        // dynamoDB.listTables(function (err, data) {
-        //     if (err) err;
-        //     else {
-        //         data.TableNames?.forEach((tableName) => {
-        //             dynamoDB.describeTable({ TableName: tableName }, function (err, data) {
-        //                 if (err) err;
-        //                 else {
-        //                     //if (tableName === 'v2_collectpoint_ups') {
-        //                     helloFunction.addEventSourceMapping('MyMapping', {
-        //                         eventSourceArn: data.Table?.TableArn,
-        //                         batchSize: 100
-        //                     });
-        //                     //}
-        //                 };
-        //             });
-        //         });
-        //     };
-        // });
+        const stack = this;
 
+        dynamoDB.listTables(function (err, data) {
+            if (err) {
+                console.error(err);
+            } else {
+                const tableNames = data.TableNames || [];
+                const tables = tableNames.map(tableName => {
+                    return dynamodb.Table.fromTableName(stack, tableName, tableName);
+                });
+
+                tables.forEach(table => {
+                    helloFunction.addEventSource(new DynamoEventSource(table, {
+                        startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+                        batchSize: 5,
+                        bisectBatchOnError: true,
+                        retryAttempts: 10,
+                    }));
+                });
+            }
+        });
     }
 }
