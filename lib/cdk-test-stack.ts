@@ -27,12 +27,17 @@ export class CDKTestStack extends cdk.Stack {
 
         dynamoDB.listTables(function (err, data) {
             if (err) {
-                console.log(err)
+                tablesName.push(err);
             } else {
                 tablesName.push(data.TableNames);
-                console.log(data)
             }
         })
+
+        function theTest() {
+            return 'the thing'
+        }
+
+        const thing = theTest()
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
@@ -45,7 +50,8 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
             environment: {
-                THE_TABLES: tablesName[0]
+                THE_TABLES: tablesName.toString(),
+                THE_THING: thing
             }
         });
 
