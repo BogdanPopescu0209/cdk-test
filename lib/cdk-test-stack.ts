@@ -93,19 +93,7 @@ export class CDKTestStack extends cdk.Stack {
             })
         })
 
-        const testNames = tableNames as any || [];
-        const names = testNames.map((tableName: string) => {
-            return dynamodb.Table.fromTableName(stack, tableName, tableName);
-        });
-
-        names.forEach((table: any) => {
-            helloFunction.addEventSource(new DynamoEventSource(table, {
-                startingPosition: lambda.StartingPosition.TRIM_HORIZON,
-                batchSize: 5,
-                bisectBatchOnError: true,
-                retryAttempts: 10,
-            }));
-        });
+        console.log('hereeee', JSON.stringify(tableNames))
 
         // dynamoDB.listTables(function (err, data) {
         //     if (err) {
