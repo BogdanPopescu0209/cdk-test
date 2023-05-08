@@ -30,15 +30,15 @@ export class CDKTestStack extends cdk.Stack {
             timeout: cdk.Duration.seconds(3)
         });
 
-        helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
-            resources: [
-                table.tableArn + '/stream/*'],
-            actions: [
-                "dynamodb:GetShardIterator",
-                "dynamodb:DescribeStream",
-                "dynamodb:GetRecords"],
-            effect: iam.Effect.ALLOW
-        }));
+        // helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
+        //     resources: [
+        //         table.tableArn + '/stream/*'],
+        //     actions: [
+        //         "dynamodb:GetShardIterator",
+        //         "dynamodb:DescribeStream",
+        //         "dynamodb:GetRecords"],
+        //     effect: iam.Effect.ALLOW
+        // }));
 
         table.grantStream(helloFunction);
 
