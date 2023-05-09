@@ -95,7 +95,7 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
             environment: {
-                THE_TABLES: JSON.stringify(listTablesResource)
+                THE_TABLES: listTablesResource.toString()
             }
         });
 
