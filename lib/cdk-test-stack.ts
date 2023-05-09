@@ -1,88 +1,11 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
-import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks';
-import * as fs from 'fs';
-import { Role, ServicePrincipal, PolicyStatement, Effect, PolicyDocument } from 'aws-cdk-lib/aws-iam';
-import * as db from 'aws-sdk/clients/dynamodb';
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
-import { StreamEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
-import * as AWS from 'aws-sdk';
-import { getTables } from './test';
-import { AwsCustomResource } from 'aws-cdk-lib/custom-resources';
-import * as cfn from 'aws-cdk-lib/custom-resources';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
         super(scope, id, props);
-
-        // const table = new dynamodb.Table(this, 'MyTable', {
-        //     partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
-        //     stream: dynamodb.StreamViewType.NEW_IMAGE,
-        // });
-
-        //const dynamoDB = new db();
-
-        // const tablesName = [] as any;
-
-        // dynamoDB.listTables(function (err, data) {
-        //     if (err) {
-        //         tablesName.push(err);
-        //     } else {
-        //         tablesName.push(data.TableNames);
-        //     }
-        // })
-
-        // async function theTest() {
-        //     await dynamoDB.listTables().promise())?.tablesName || []
-        // }
-
-        // const listTables = async (): Promise<string[]> => (await dynamoDB.listTables().promise())?.TableNames || [];
-
-        // const thing = listTables().then(data => data);
-
-        // async function getTableNames() {
-        //     const dynamodb = new AWS.DynamoDB();
-        //     const data = await dynamodb.listTables().promise();
-        //     return data.TableNames;
-        // }
-
-        // const thing = getTableNames().then(tableNames => { return tableNames });
-
-        // const dynamodb = new AWS.DynamoDB();
-
-        // const thing = new Promise((resolve, reject) => {
-        //     dynamodb.listTables(function (err, data) {
-        //         if (err) {
-        //             reject(err)
-        //         } else {
-        //             resolve(data.TableNames)
-        //         }
-        //     })
-        // })
-
-        //const thing = getTables();
-
-        const dynamoDBListTablesPolicy = new iam.PolicyStatement({
-            resources: ['*'],
-            actions: ['dynamodb:ListTables', 'dynamodb:PutItem'],
-            effect: iam.Effect.ALLOW
-        })
-
-        const customResourcePolicy = cfn.AwsCustomResourcePolicy.fromStatements([dynamoDBListTablesPolicy]);
-
-        const listTablesResource = new AwsCustomResource(this, 'ListTablesResource', {
-            onCreate: {
-                service: 'DynamoDB',
-                action: 'listTables',
-                parameters: {},
-                physicalResourceId: cfn.PhysicalResourceId.of('ListTablesResource')
-            },
-            policy: customResourcePolicy
-        });
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
@@ -94,9 +17,6 @@ export class CDKTestStack extends cdk.Stack {
             runtime: lambda.Runtime.NODEJS_16_X,
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
-            environment: {
-                THE_TABLES: listTablesResource.toString()
-            }
         });
 
         helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
@@ -110,61 +30,11 @@ export class CDKTestStack extends cdk.Stack {
             effect: iam.Effect.ALLOW
         }));
 
-
         // helloFunction.addEventSource(new DynamoEventSource(table, {
         //     startingPosition: lambda.StartingPosition.TRIM_HORIZON,
         //     batchSize: 5,
         //     bisectBatchOnError: true,
         //     retryAttempts: 10,
         // }));
-
-        // const stateMachine = new sfn.StateMachine(this, 'MyStateMachine', {
-        //     definition: new tasks.LambdaInvoke(this, "MyLambdaTask", {
-        //         lambdaFunction: helloFunction
-        //     }).next(new sfn.Succeed(this, "GreetedWorld"))
-        // });
-
-        // const file = fs.readFileSync("./stepfunction/stepfunction-parser.json");
-
-        // const role = new Role(this, 'StepFunctionRole', {
-        //     assumedBy: new ServicePrincipal('states.amazonaws.com'),
-        //     description: 'Role for Step Functions to access other AWS services',
-        // });
-
-        // const fileToString = file.toString();
-
-        // const stepFunction = new sfn.CfnStateMachine(
-        //     this,
-        //     "cfnStepFunction",
-        //     {
-        //         roleArn: role.roleArn,
-        //         definitionString: fileToString.replace(new RegExp('\\$\\$environment\\$\\$', 'g'), 'sandbox'),
-        //         stateMachineName: 'sandbox-parser',
-        //     }
-        // );
-
-        // const existingTable = dynamodb.Table.fromTableName(this, 'v2_collectpoint_dpd_private', 'v2_collectpoint_dpd_private');
-
-        // existingTable.grantStream(helloFunction);
-
-        // dynamoDB.listTables(function (err, data) {
-        //     if (err) {
-        //         console.error(err);
-        //     } else {
-        //         const tableNames = data.TableNames || [];
-        //         const tables = tableNames.map(tableName => {
-        //             return dynamodb.Table.fromTableName(stack, tableName, tableName);
-        //         });
-
-        //         tables.forEach(table => {
-        //             helloFunction.addEventSource(new DynamoEventSource(table, {
-        //                 startingPosition: lambda.StartingPosition.TRIM_HORIZON,
-        //                 batchSize: 5,
-        //                 bisectBatchOnError: true,
-        //                 retryAttempts: 10,
-        //             }));
-        //         });
-        //     }
-        // });
     }
 }
