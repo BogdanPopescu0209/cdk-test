@@ -12,6 +12,8 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import * as AWS from 'aws-sdk';
 import { getTables } from './test';
+import { AwsCustomResource } from 'aws-cdk-lib/custom-resources';
+import * as cfn from 'aws-cdk-lib/custom-resources';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -22,7 +24,7 @@ export class CDKTestStack extends cdk.Stack {
         //     stream: dynamodb.StreamViewType.NEW_IMAGE,
         // });
 
-        const dynamoDB = new db();
+        //const dynamoDB = new db();
 
         // const tablesName = [] as any;
 
@@ -62,7 +64,25 @@ export class CDKTestStack extends cdk.Stack {
         //     })
         // })
 
-        const thing = getTables();
+        //const thing = getTables();
+
+        const dynamoDBListTablesPolicy = new iam.PolicyStatement({
+            resources: ['*'],
+            actions: ['dynamodb:ListTables', 'dynamodb:PutItem'],
+            effect: iam.Effect.ALLOW
+        })
+
+        const customResourcePolicy = cfn.AwsCustomResourcePolicy.fromStatements([dynamoDBListTablesPolicy]);
+
+        const listTablesResource = new AwsCustomResource(this, 'ListTablesResource', {
+            onCreate: {
+                service: 'DynamoDB',
+                action: 'listTables',
+                parameters: {},
+                physicalResourceId: cfn.PhysicalResourceId.of('ListTablesResource')
+            },
+            policy: customResourcePolicy
+        });
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
@@ -75,7 +95,7 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
             environment: {
-                THE_TABLES: JSON.stringify(thing)
+                THE_TABLES: JSON.stringify(listTablesResource)
             }
         });
 

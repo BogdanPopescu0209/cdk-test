@@ -1,7 +1,9 @@
 import * as AWS from 'aws-sdk';
+import { AwsCustomResource } from 'aws-cdk-lib/custom-resources';
+import * as cfn from 'aws-cdk-lib/custom-resources';
 
-export async function getTables() {
-    const dynamodb = new AWS.DynamoDB({ region: 'eu-west-1' });
+export async function getTables(scope: any) {
+    //const dynamodb = new AWS.DynamoDB({ region: 'eu-west-1' });
 
     // const params = {
     //     TableName: 'my_special_table',
@@ -11,17 +13,17 @@ export async function getTables() {
     //     }
     // };
 
-    dynamodb.putItem()
+    // dynamodb.putItem()
 
-    const thing = await new Promise((resolve, reject) => {
-        dynamodb.listTables(function (err, data) {
-            if (err) {
-                reject(err)
-            } else {
-                resolve(data)
-            }
-        })
-    })
+    // const thing = await new Promise((resolve, reject) => {
+    //     dynamodb.listTables(function (err, data) {
+    //         if (err) {
+    //             reject(err)
+    //         } else {
+    //             resolve(data)
+    //         }
+    //     })
+    // })
 
     // dynamodb.putItem(params, function (err, data) {
     //     if (err) {
@@ -31,5 +33,5 @@ export async function getTables() {
     //     }
     // });
 
-    return thing;
+    return '';
 }

@@ -12,11 +12,11 @@ export class CdkTestStack extends cdk.Stack {
       connectionArn: 'arn:aws:codestar-connections:eu-west-1:452280938609:connection/bebcb069-0d3c-48d9-8fc4-750e94c5be20'
     });
 
-    const dynamoDBListTablesPolicy = new iam.PolicyStatement({
-      resources: ['*'],
-      actions: ['dynamodb:ListTables', 'dynamodb:PutItem'],
-      effect: iam.Effect.ALLOW
-    })
+    // const dynamoDBListTablesPolicy = new iam.PolicyStatement({
+    //   resources: ['*'],
+    //   actions: ['dynamodb:ListTables', 'dynamodb:PutItem'],
+    //   effect: iam.Effect.ALLOW
+    // })
 
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       pipelineName: 'CDK-test-pipeline',
@@ -29,7 +29,7 @@ export class CdkTestStack extends cdk.Stack {
         buildEnvironment: {
           privileged: true
         },
-        rolePolicy: [dynamoDBListTablesPolicy]
+        //rolePolicy: [dynamoDBListTablesPolicy]
       },
       selfMutation: true,
       synth: new pipelines.ShellStep('Synth', {
