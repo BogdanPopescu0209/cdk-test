@@ -2,8 +2,8 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import * as queue from 'aws-cdk-lib/aws-sqs';
-import { Duration } from 'aws-cdk-lib/core'
+// import * as queue from 'aws-cdk-lib/aws-sqs';
+// import { Duration } from 'aws-cdk-lib/core'
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -32,10 +32,10 @@ export class CDKTestStack extends cdk.Stack {
             effect: iam.Effect.ALLOW
         }));
 
-        const myQueue = new queue.Queue(this, 'MyQueue', {
-            encryption: queue.QueueEncryption.KMS_MANAGED, 
-            retentionPeriod: Duration.days(7),
-        });
+        // const myQueue = new queue.Queue(this, 'MyQueue', {
+        //     encryption: queue.QueueEncryption.KMS_MANAGED, 
+        //     retentionPeriod: Duration.days(7),
+        // });
 
         // helloFunction.addEventSource(new DynamoEventSource(table, {
         //     startingPosition: lambda.StartingPosition.TRIM_HORIZON,
