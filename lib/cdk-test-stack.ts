@@ -4,11 +4,14 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as queue from 'aws-cdk-lib/aws-sqs';
 import { networks } from '../shared/variables'
-//const networks = require('../shared/variables').networks;
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
         super(scope, id, props);
+
+        const latestStringToken = ssm.StringParameter.valueForStringParameter(
+            this, 'test-parameter');
 
         const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
@@ -21,7 +24,8 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
             environment: {
-                PUBLIC_NETWORKS: networks
+                PUBLIC_NETWORKS: networks,
+                PARAMETER_VALUE: latestStringToken
             }
         });
 
