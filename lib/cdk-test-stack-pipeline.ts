@@ -27,7 +27,7 @@ export class CdkTestStack extends cdk.Stack {
           phases: {
             install: {
               "runtime-versions": {
-                nodejs: "18"
+                nodejs: "16"
               }
             }
           }
@@ -37,11 +37,8 @@ export class CdkTestStack extends cdk.Stack {
       synth: new pipelines.ShellStep('Synth', {
         input: githubInput,
         primaryOutputDirectory: './cdk.out',
-        installCommands: [
-          'node -v',
-          'npm install -g npm@9'
-        ],
         commands: [
+          'npm install -g npm@8',
           'npm ci --include=dev',
           'npx cdk synth'
         ],
