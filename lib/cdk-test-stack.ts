@@ -15,7 +15,7 @@ export class CDKTestStack extends cdk.Stack {
                     console.log("Hello World!");
                 };
             `),
-            runtime: lambda.Runtime.NODEJS_16_X,
+            runtime: lambda.Runtime.NODEJS_18_X,
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3)
         });
