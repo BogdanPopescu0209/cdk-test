@@ -9,7 +9,7 @@ new CdkTestStack(app, 'CdkTestStack', {
 
 });
 
-new CdkTestStack(app, 'CdkTestStack', {
+new CdkTestStack(app, 'CdkTestStackUS', {
 
   env: { account: '452280938609', region: 'us-west-2' },
 
