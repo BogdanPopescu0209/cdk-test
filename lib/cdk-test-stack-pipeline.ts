@@ -27,7 +27,7 @@ export class CdkTestStack extends cdk.Stack {
           phases: {
             install: {
               "runtime-versions": {
-                nodejs: "16"
+                nodejs: "14"
               }
             }
           }
