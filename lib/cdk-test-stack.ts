@@ -1,7 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as iam from 'aws-cdk-lib/aws-iam';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -19,16 +18,5 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3)
         });
-
-        helloFunction.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
-            resources: [
-                '*'],
-            actions: [
-                "dynamodb:DescribeStream",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
-                "dynamodb:ListStreams"],
-            effect: iam.Effect.ALLOW
-        }));
     }
 }
