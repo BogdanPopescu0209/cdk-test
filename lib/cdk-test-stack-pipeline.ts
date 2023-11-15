@@ -42,7 +42,6 @@ export class CdkTestStack extends cdk.Stack {
           'npm install -g npm@9'
         ],
         commands: [
-          'npm install -g npm',
           'npm ci --include=dev',
           'npx cdk synth'
         ],
