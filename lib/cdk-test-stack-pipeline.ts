@@ -22,25 +22,12 @@ export class CdkTestStack extends cdk.Stack {
       synthCodeBuildDefaults: {
         buildEnvironment: {
           privileged: true
-        },
-        partialBuildSpec: BuildSpec.fromObject({
-          phases: {
-            install: {
-              "runtime-versions": {
-                nodejs: "16"
-              }
-            }
-          }
-        })
+        }
       },
       selfMutation: true,
       synth: new pipelines.ShellStep('Synth', {
         input: githubInput,
         primaryOutputDirectory: './cdk.out',
-        installCommands: [
-          'node -v',
-          'npm install -g npm@9'
-        ],
         commands: [
           'npm ci --include=dev',
           'npx cdk synth'
