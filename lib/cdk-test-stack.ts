@@ -6,7 +6,7 @@ export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
         super(scope, id, props);
 
-        const helloFunction = new lambda.Function(this, 'MyLambdaFunctionTest', {
+        const helloFunctionNumberOne = new lambda.Function(this, 'MyLambdaFunctionTestNumberOne', {
             code: lambda.Code.fromInline(`
                 exports.handler = (event) => {
                     console.log(event);
@@ -21,7 +21,7 @@ export class CDKTestStack extends cdk.Stack {
             },
         });
 
-        const helloFunction1 = new lambda.Function(this, 'MyLambdaFunctionTest', {
+        const helloFunctionNumberTwo = new lambda.Function(this, 'MyLambdaFunctionTestNumber2', {
             code: lambda.Code.fromInline(`
                 exports.handler = (event) => {
                     console.log(event);
