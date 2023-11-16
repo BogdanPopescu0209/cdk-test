@@ -17,7 +17,7 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
             environment: {
-                REGION: 'eu-west-1',
+                REGION: props.env?.region!,
             },
         });
 
@@ -32,7 +32,7 @@ export class CDKTestStack extends cdk.Stack {
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
             environment: {
-                REGION: 'us-east-1',
+                REGION: props.env?.region!,
             },
         });
     }
