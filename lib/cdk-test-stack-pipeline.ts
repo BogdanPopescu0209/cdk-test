@@ -48,7 +48,6 @@ export class CdkTestStack extends cdk.Stack {
     const sandboxWave = pipeline.addWave('sandbox');
     sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {env: { ...props?.env, region: 'eu-west-1' }}))
 
-    const sandboxWaveUS = pipeline.addWave('sandbox');
     sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage-us', {env: { ...props?.env, region: 'us-east-1' }}))
   }
 }
