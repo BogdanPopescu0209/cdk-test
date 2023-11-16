@@ -8,9 +8,3 @@ new CdkTestStack(app, 'CdkTestStack', {
   env: { account: '452280938609', region: 'eu-west-1' },
 
 });
-
-new CdkTestStack(app, 'CdkTestStack1', {
-
-  env: { account: '452280938609', region: 'us-east-1' },
-
-});
