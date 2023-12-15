@@ -7,7 +7,7 @@ export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
         super(scope, id, props);
 
-        const helloFunctionNumberOne = new lambda.Function(this, 'MyLambdaFunctionTest10', {
+        const helloFunctionNumberOne = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromInline(`
                 exports.handler = (event) => {
                     console.log(event);
