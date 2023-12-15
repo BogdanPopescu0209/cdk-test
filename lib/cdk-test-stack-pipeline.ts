@@ -46,7 +46,7 @@ export class CdkTestStack extends cdk.Stack {
     });
 
     const sandboxWave = pipeline.addWave('sandbox');
-    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-stage', {}))
+    sandboxWave.addStage(new CollecpointIngressStage(this, 'sandbox-eu-west-1-stage', {}))
   }
 }
 
