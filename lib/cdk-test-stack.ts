@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 // import { stepFunctionSandbox } from './step-function';
-import * as ssm from '@aws-cdk/aws-ssm';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 
 export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -23,11 +23,10 @@ export class CDKTestStack extends cdk.Stack {
             },
         });
 
-        // Retrieve the parameter
-        const parameter = ssm.StringParameter.fromStringParameterName(this, 'MyParameter', 'publicNetworks');
-
-        // Update the parameter value
-        parameter.setParameter('new-value', { overwrite: true });
+        new ssm.StringParameter(this, 'MyParameter', {
+            parameterName: '/myapp/config/myparameter',
+            stringValue: 'myparameter-value',
+        });
 
         // const testSandbox = stepFunctionSandbox(this);
     }
