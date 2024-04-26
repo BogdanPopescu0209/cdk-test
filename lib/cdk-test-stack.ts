@@ -25,7 +25,7 @@ export class CDKTestStack extends cdk.Stack {
 
         new ssm.StringParameter(this, 'MyParameter', {
             parameterName: '/myapp/config/myparameter',
-            stringValue: 'myparameter-value',
+            stringValue: 'myparameter-value, helllooo, new parameter',
         });
 
         // const testSandbox = stepFunctionSandbox(this);
