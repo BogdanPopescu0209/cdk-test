@@ -32,3 +32,10 @@ export function stepFunctionSandbox(scope: Construct) {
         }
     );
 }
+
+    // const collateReplicateTableNames = new stepfunctions.Pass(scope, 'Collate Replicate Table Names', {
+    //     parameters: {
+    //         "replicateTableNames.$": "$[*][*].replicateTableName[*]"
+    //     }
+    // })
+    //     .next(getRegions);
