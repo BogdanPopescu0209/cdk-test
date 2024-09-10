@@ -12,7 +12,7 @@ export function stepFunctionSandbox(scope: Construct) {
     // const stateTwo = new stepfunctions.Pass(scope, 'StateTwo', {})
 
     const sandboxLogGroup = new logs.LogGroup(scope, 'Step Functions Log Group', {
-        logGroupName: `sandbox-pipeline-test-new`,
+        logGroupName: `sandbox-pipeline-test-new-1`,
         retention: logs.RetentionDays.INFINITE,
     });
 
@@ -50,13 +50,13 @@ export function stepFunctionSandbox(scope: Construct) {
 
     const parserStepFunction = new stepfunctions.StateMachine(
         scope,
-        `test-step-function`,
+        `test-step-function-new-1`,
         {
             definition: stepfunctions.Chain.start(
                 describeOpenStreetMapInstance
                     .next(isOpenStreetMapInstanceRunning)
             ),
-            stateMachineName: `test-step-function-sandbox-new`,
+            stateMachineName: `test-step-function-sandbox-new-1`,
             logs: {
                 level: stepfunctions.LogLevel.ALL,
                 includeExecutionData: true,
