@@ -39,6 +39,16 @@ export function stepFunctionSandbox(scope: Construct) {
         iamResources: ['arn:aws:ec2:eu-west-1:452280938609:instance/i-0f86d6af863628a6c'],
         resultPath: '$.StartInstanceResult'
     })
+        .addRetry({
+            errors: ['States.ALL'],
+            backoffRate: 1,
+            interval: cdk.Duration.seconds(10),
+            maxAttempts: 3
+        })
+        .addCatch(new stepfunctions.Pass(scope, 'Start Open Street Map Instance Failed'), {
+            errors: ['States.ALL'],
+            resultPath: '$.StartInstanceResult'
+        })
         .next(waitForInstance);
 
     const doNothing = new stepfunctions.Pass(scope, 'Do nothing');
