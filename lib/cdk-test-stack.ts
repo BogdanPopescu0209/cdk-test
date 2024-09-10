@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-// import { stepFunctionSandbox } from './step-function';
+import { stepFunctionSandbox } from './step-function';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 
 export class CDKTestStack extends cdk.Stack {
@@ -28,6 +28,6 @@ export class CDKTestStack extends cdk.Stack {
             stringValue: 'myparameter-value, helllooo, new parameter',
         });
 
-        // const testSandbox = stepFunctionSandbox(this);
+        const testSandbox = stepFunctionSandbox(this);
     }
 }
