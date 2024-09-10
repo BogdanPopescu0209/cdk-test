@@ -57,7 +57,7 @@ export function stepFunctionSandbox(scope: Construct) {
             interval: cdk.Duration.seconds(10),
             maxAttempts: 3
         })
-        .addCatch(new stepfunctions.Pass(scope, 'Start Open Street Map Instance Failed'), {
+        .addCatch(new stepfunctions.Fail(scope, 'Start Open Street Map Instance Failed'), {
             errors: ['States.ALL'],
             resultPath: '$.StartInstanceResult'
         })
@@ -70,7 +70,7 @@ export function stepFunctionSandbox(scope: Construct) {
     const failedState = new stepfunctions.Fail(scope, 'Failed State');
 
     const isOpenStreetMapInstanceRunning = new stepfunctions.Choice(scope, 'Is Open Street Map Instance Running?')
-        .when(stepfunctions.Condition.stringEquals('$.Reservations[0].Instances[0].State.Name', 'running'), doNothing)
+        .when(stepfunctions.Condition.stringEquals('$.describeInstancesResult.Reservations[0].Instances[0].State.Name', 'running'), doNothing)
         .when(stepfunctions.Condition.numberGreaterThanEquals('$.retryCount', 3), failedState)
         .otherwise(startOpenStreetMapInstance);
 
