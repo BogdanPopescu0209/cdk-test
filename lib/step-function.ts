@@ -42,6 +42,8 @@ export function stepFunctionSandbox(scope: Construct) {
         }
     });
 
+    const failedState = new stepfunctions.Fail(scope, 'Start Open Street Map Instance Failed');
+
     const startOpenStreetMapInstance = new tasks.CallAwsService(scope, 'Start Open Street Map Instance', {
         service: 'ec2',
         action: 'startInstances',
@@ -57,7 +59,7 @@ export function stepFunctionSandbox(scope: Construct) {
             interval: cdk.Duration.seconds(10),
             maxAttempts: 3
         })
-        .addCatch(new stepfunctions.Fail(scope, 'Start Open Street Map Instance Failed'), {
+        .addCatch(failedState, {
             errors: ['States.ALL'],
             resultPath: '$.StartInstanceResult'
         })
@@ -66,8 +68,6 @@ export function stepFunctionSandbox(scope: Construct) {
         .next(waitForInstance);
 
     const doNothing = new stepfunctions.Pass(scope, 'Do nothing');
-
-    const failedState = new stepfunctions.Fail(scope, 'Failed State');
 
     const isOpenStreetMapInstanceRunning = new stepfunctions.Choice(scope, 'Is Open Street Map Instance Running?')
         .when(stepfunctions.Condition.stringEquals('$.describeInstancesResult.Reservations[0].Instances[0].State.Name', 'running'), doNothing)
