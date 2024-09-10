@@ -22,8 +22,7 @@ export function stepFunctionSandbox(scope: Construct) {
         parameters: {
             InstanceIds: ['i-0f86d6af863628a6c'],
         },
-        iamResources: ['arn:aws:ec2:eu-west-1:452280938609:instance/i-0f86d6af863628a6c'],
-        resultPath: '$.Reservations',
+        iamResources: ['arn:aws:ec2:eu-west-1:452280938609:instance/i-0f86d6af863628a6c']
     });
 
     const waitForInstance = new stepfunctions.Wait(scope, 'Wait 1 Minute', {
