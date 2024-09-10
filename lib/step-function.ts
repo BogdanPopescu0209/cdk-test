@@ -12,7 +12,7 @@ export function stepFunctionSandbox(scope: Construct) {
     // const stateTwo = new stepfunctions.Pass(scope, 'StateTwo', {})
 
     const sandboxLogGroup = new logs.LogGroup(scope, 'Step Functions Log Group', {
-        logGroupName: `sandbox-pipeline-test`,
+        logGroupName: `sandbox-pipeline-test-1`,
         retention: logs.RetentionDays.INFINITE,
     });
 
