@@ -50,13 +50,13 @@ export function stepFunctionSandbox(scope: Construct) {
 
     const parserStepFunction = new stepfunctions.StateMachine(
         scope,
-        `test-step-function-new`,
+        `test-step-function`,
         {
             definition: stepfunctions.Chain.start(
                 describeOpenStreetMapInstance
                     .next(isOpenStreetMapInstanceRunning)
             ),
-            stateMachineName: `test-step-function-sandbox`,
+            stateMachineName: `test-step-function-sandbox-new`,
             logs: {
                 level: stepfunctions.LogLevel.ALL,
                 includeExecutionData: true,
