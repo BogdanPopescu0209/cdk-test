@@ -30,6 +30,17 @@ export function stepFunctionSandbox(scope: Construct) {
     })
         .next(describeOpenStreetMapInstance);
 
+    const incrementRetryCount = new stepfunctions.Pass(scope, 'IncrementRetryCount', {
+        result: stepfunctions.Result.fromObject({ retryIncrement: 1 }),
+        resultPath: '$.retryIncrement',
+    });
+
+    const updateRetryCount = new stepfunctions.Pass(scope, 'UpdateRetryCount', {
+        parameters: {
+            'retryCount.$': 'States.MathAdd($.retryCount, $.retryIncrement.retryIncrement)'
+        }
+    });
+
     const startOpenStreetMapInstance = new tasks.CallAwsService(scope, 'Start Open Street Map Instance', {
         service: 'ec2',
         action: 'startInstances',
@@ -39,22 +50,17 @@ export function stepFunctionSandbox(scope: Construct) {
         iamResources: ['arn:aws:ec2:eu-west-1:452280938609:instance/i-0f86d6af863628a6c'],
         resultPath: '$.StartInstanceResult'
     })
-        .addRetry({
-            errors: ['States.ALL'],
-            backoffRate: 1,
-            interval: cdk.Duration.seconds(10),
-            maxAttempts: 3
-        })
-        .addCatch(new stepfunctions.Pass(scope, 'Start Open Street Map Instance Failed'), {
-            errors: ['States.ALL'],
-            resultPath: '$.StartInstanceResult'
-        })
+        .next(incrementRetryCount)
+        .next(updateRetryCount)
         .next(waitForInstance);
 
     const doNothing = new stepfunctions.Pass(scope, 'Do nothing');
 
+    const failedState = new stepfunctions.Fail(scope, 'Failed State');
+
     const isOpenStreetMapInstanceRunning = new stepfunctions.Choice(scope, 'Is Open Street Map Instance Running?')
         .when(stepfunctions.Condition.stringEquals('$.Reservations[0].Instances[0].State.Name', 'running'), doNothing)
+        .when(stepfunctions.Condition.numberGreaterThanEquals('$.retryCount', 3), failedState)
         .otherwise(startOpenStreetMapInstance);
 
     const parserStepFunction = new stepfunctions.StateMachine(
