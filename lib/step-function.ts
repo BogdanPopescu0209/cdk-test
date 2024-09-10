@@ -41,33 +41,10 @@ export function stepFunctionSandbox(scope: Construct) {
     })
         .next(waitForInstance);
 
-    const incrementRetryCount = new stepfunctions.Pass(scope, 'IncrementRetryCount', {
-        result: stepfunctions.Result.fromObject({ retryIncrement: 1 }),
-        resultPath: '$.retryIncrement',
-    });
-
-    const updateRetryCount = new stepfunctions.Pass(scope, 'UpdateRetryCount', {
-        parameters: {
-            'retryCount.$': 'States.MathAdd($.retryCount, $.retryIncrement.retryIncrement)'
-        }
-    });
-
-    const failState = new stepfunctions.Fail(scope, 'FailState', {
-        error: 'InstanceFailedToStart',
-        cause: 'The instance failed to start after 3 retries.'
-    });
-
     const doNothing = new stepfunctions.Pass(scope, 'Do nothing');
 
     const isOpenStreetMapInstanceRunning = new stepfunctions.Choice(scope, 'Is Open Street Map Instance Running?')
-        .when(
-            stepfunctions.Condition.stringEquals('$.describeInstancesResult.Reservations[0].Instances[0].State.Name', 'running'),
-            doNothing
-        )
-        .when(
-            stepfunctions.Condition.numberGreaterThanEquals('$.retryCount', 3),
-            failState
-        )
+        .when(stepfunctions.Condition.stringEquals('$.Reservations[0].Instances[0].State.Name', 'running'), doNothing)
         .otherwise(startOpenStreetMapInstance);
 
     const parserStepFunction = new stepfunctions.StateMachine(
@@ -77,9 +54,6 @@ export function stepFunctionSandbox(scope: Construct) {
             definition: stepfunctions.Chain.start(
                 describeOpenStreetMapInstance
                     .next(isOpenStreetMapInstanceRunning)
-                    .next(incrementRetryCount)
-                    .next(updateRetryCount)
-                    .next(describeOpenStreetMapInstance)
             ),
             stateMachineName: `test-step-function-sandbox-new-1`,
             logs: {
