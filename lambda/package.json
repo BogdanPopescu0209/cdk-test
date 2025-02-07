@@ -12,10 +12,5 @@
   "dependencies": {
     "esbuild": "^0.24.2",
     "sharp": "^0.33.5"
-  },
-  "overrides": {
-    "sharp": {
-      "@img/sharp-linux-arm64": "^0.33.5"
-    }
   }
 }
