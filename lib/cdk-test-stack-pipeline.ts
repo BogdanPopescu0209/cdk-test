@@ -40,6 +40,7 @@ export class CdkTestStack extends cdk.Stack {
         commands: [
           'npm install -g npm@8',
           'npm ci --include=dev',
+          'npm run build:lambda',
           'npx cdk synth'
         ],
       })
