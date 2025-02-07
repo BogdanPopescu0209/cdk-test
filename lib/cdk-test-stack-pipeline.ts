@@ -40,7 +40,7 @@ export class CdkTestStack extends cdk.Stack {
         commands: [
           'npm install -g npm@9',
           'npm ci --include=dev',
-          'npm install --cpu=x64 --os=linux sharp',
+          'npm install --cpu=arm64 --os=linux sharp',
           'npm run build:subfolder',
           'npx cdk synth'
         ],
