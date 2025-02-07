@@ -20,7 +20,7 @@ export class CdkTestStack extends cdk.Stack {
         commands: [
           'npm install -g npm@9',
           'npm ci --include=dev',
-          'npm run build:lambda',
+          'npm run build:subfolder',
           'npx cdk synth'
         ],
       })

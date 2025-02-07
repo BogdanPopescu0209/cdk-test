@@ -10,7 +10,7 @@ export class CDKTestStack extends cdk.Stack {
         super(scope, id, props);
 
         const helloFunctionNumberOne = new lambda.Function(this, 'MyLambdaFunctionTest', {
-            code: lambda.Code.fromAsset('../lambda/dist'),
+            code: lambda.Code.fromAsset('./lambda/dist'),
             runtime: lambda.Runtime.NODEJS_18_X,
             handler: "index.handler",
             timeout: cdk.Duration.seconds(3),
