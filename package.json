@@ -9,7 +9,8 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "build:subfolder": "npm --prefix ./lambda run build"
+    "build:subfolder": "npm --prefix ./lambda run build",
+    "install:sharp": "npm --prefix ./lambda run install:sharp"
   },
   "devDependencies": {
     "@types/jest": "^29.2.5",

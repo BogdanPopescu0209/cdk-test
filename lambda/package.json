@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node --target=esnext"
+    "build": "npx esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node --target=esnext",
+    "install:sharp": "npm install --os=linux --cpu=arm64 sharp"
   },
   "author": "",
   "license": "ISC",
