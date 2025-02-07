@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as pipelines from 'aws-cdk-lib/pipelines';
 import { CollecpointIngressStage } from './cdk-test-stage';
+import { BuildSpec } from 'aws-cdk-lib/aws-codebuild';
 
 export class CdkTestStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -13,6 +14,25 @@ export class CdkTestStack extends cdk.Stack {
 
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       pipelineName: 'CDK-test-pipeline',
+      codeBuildDefaults: {
+        buildEnvironment: {
+          privileged: true
+        }
+      },
+      synthCodeBuildDefaults: {
+        buildEnvironment: {
+          privileged: true
+        },
+        partialBuildSpec: BuildSpec.fromObject({
+          phases: {
+            install: {
+              "runtime-versions": {
+                nodejs: "18"
+              }
+            }
+          }
+        })
+      },
       selfMutation: true,
       synth: new pipelines.ShellStep('Synth', {
         input: githubInput,
