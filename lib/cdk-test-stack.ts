@@ -9,6 +9,9 @@ export class CDKTestStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps) {
         super(scope, id, props);
 
+        const existingLayerArn = 'arn:aws:lambda:eu-west-1:452280938609:layer:sharp:1';
+        const myLayer = lambda.LayerVersion.fromLayerVersionArn(this, 'MyExistingLayer', existingLayerArn);
+
         const helloFunctionNumberOne = new lambda.Function(this, 'MyLambdaFunctionTest', {
             code: lambda.Code.fromAsset('./lambda/dist'),
             runtime: lambda.Runtime.NODEJS_18_X,
@@ -18,6 +21,7 @@ export class CDKTestStack extends cdk.Stack {
                 REGION: props.env?.region!,
             },
             architecture: lambda.Architecture.ARM_64,
+            layers: [myLayer]
         });
 
         helloFunctionNumberOne.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
