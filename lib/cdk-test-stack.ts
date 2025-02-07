@@ -17,6 +17,7 @@ export class CDKTestStack extends cdk.Stack {
             environment: {
                 REGION: props.env?.region!,
             },
+            architecture: lambda.Architecture.ARM_64,
         });
 
         helloFunctionNumberOne.grantPrincipal.addToPrincipalPolicy(new iam.PolicyStatement({
