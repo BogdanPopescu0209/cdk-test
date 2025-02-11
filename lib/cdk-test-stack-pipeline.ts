@@ -24,11 +24,17 @@ export class CdkTestStack extends cdk.Stack {
           privileged: true
         },
         partialBuildSpec: BuildSpec.fromObject({
+          version: '0.2',
+          env: {
+            'runtime-versions': {
+              nodejs: 22 // Select Node.js 22
+            }
+          },
           phases: {
             install: {
-              "runtime-versions": {
-                nodejs: "18"
-              }
+              commands: [
+                'node -v' // Check the node version
+              ]
             }
           }
         })
